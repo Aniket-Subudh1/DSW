@@ -7,6 +7,9 @@ const bundleAnalyzer = withBundleAnalyzer({
 
 const nextConfig: NextConfig = {
   /* config options here */
+  images: {
+    qualities: [100, 75],
+  },
 };
 
 export default bundleAnalyzer(nextConfig);
