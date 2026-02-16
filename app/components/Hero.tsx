@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useState, useEffect } from "react";
+import Lottie from "lottie-react";
+import diamondAnimation from "@/public/assets/diamond.json";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -26,8 +28,12 @@ const navLinks = [
 ];
 
 export function Hero() {
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { scrollYProgress } = useScroll();
+  const imageY = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.06]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,8 +47,6 @@ export function Hero() {
   return (
     <section className="relative w-full min-h-[100svh] sm:min-h-[100dvh] overflow-hidden bg-black">
 
-
-      {/* Background */}
       <Image
         src="/assets/bg.png"
         alt="Background"
@@ -52,7 +56,6 @@ export function Hero() {
         className="object-cover"
       />
 
-      {/* Background Noise */}
       <div
         className="
           absolute inset-0
@@ -66,7 +69,9 @@ export function Hero() {
         "
       />
 
-      {/* Navbar - Fixed to top */}
+      <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-black/70 via-black/35 to-transparent" />
+      <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-black/55 via-transparent to-black/20" />
+
       <motion.nav
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -82,7 +87,7 @@ export function Hero() {
           ${scrolled ? 'backdrop-blur-xl bg-black/80' : 'bg-transparent'}
         `}
       >
-        {/* Brand Name */}
+
         <div className="relative">
           <h1
             className="
@@ -95,7 +100,6 @@ export function Hero() {
           </h1>
         </div>
 
-        {/* Desktop Navigation Links */}
         <div className="hidden lg:flex items-center gap-8 xl:gap-12 absolute left-1/2 -translate-x-1/2">
           {navLinks.map((link, index) => (
             <motion.a
@@ -116,7 +120,6 @@ export function Hero() {
           ))}
         </div>
 
-        {/* Mobile Menu Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="lg:hidden relative w-6 h-6 flex items-center justify-center group"
@@ -158,7 +161,6 @@ export function Hero() {
         </div>
       </motion.nav>
 
-      {/* Mobile Menu Overlay */}
       <motion.div
         initial={false}
         animate={mobileMenuOpen ? { opacity: 1, pointerEvents: "auto" } : { opacity: 0, pointerEvents: "none" }}
@@ -192,93 +194,134 @@ export function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* Center Content */}
-      <div className="relative z-20 flex items-start sm:items-center pt-32 sm:pt-24 lg:pt-0 pb-10 sm:pb-0 min-h-[100svh] sm:min-h-[100dvh]">
+      <div className="relative  z-20 flex items-start top-4 sm:items-center pt-32 sm:pt-24 lg:pt-20 xl:pt-0 pb-10 sm:pb-0 min-h-[100svh] sm:min-h-[100dvh]">
         <div className="w-full px-6 sm:px-10 lg:px-20">
-          <motion.div 
-            className="max-w-4xl relative"
-            variants={staggerContainer}
-            initial="initial"
-            animate="animate"
-          >
-            {/* Vertical Accent Line */}
+          <div className="flex flex-col lg:flex-row items-start lg:items-center gap-10 lg:gap-8 xl:gap-10">
+         
             <motion.div 
-              className="absolute -left-4 sm:-left-8 top-0 w-[1px] h-32 sm:h-40 bg-gradient-to-b from-white/40 via-white/20 to-transparent"
-              initial={{ opacity: 0, scaleY: 0 }}
-              animate={{ opacity: 1, scaleY: 1 }}
-              transition={{ duration: 1.2, ease: [0.33, 1, 0.68, 1], delay: 0.2 }}
-              style={{ transformOrigin: 'top' }}
-            />
-
-            <motion.h2
-              variants={fadeInUp}
-              className="
-                text-white/95 font-medium
-                font-[family-name:var(--font-museo-moderno)]
-                text-4xl sm:text-6xl lg:text-7xl
-                leading-[1.1]
-                tracking-tight
-              "
+              className="max-w-4xl relative sm:left-20 sm:top-5 -top-10 lg:left-10 flex-1 lg:max-w-[52%]"
+              variants={staggerContainer}
+              initial="initial"
+              animate="animate"
             >
-              Scalable products,
-              <br />
-              disciplined execution.
-            </motion.h2>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, y: 8 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 1.1, ease: [0.33, 1, 0.68, 1], delay: 0.65 }}
+                className="absolute left-[-56px] sm:left-[-72px] lg:left-[-88px] top-[78px] sm:top-[98px] lg:top-[112px] w-14 sm:w-20 lg:w-24 pointer-events-none hidden sm:block z-0"
+              >
+                <div className="absolute inset-0 rounded-full bg-white/10 blur-xl opacity-55" />
+              
+              </motion.div>
 
-            <motion.div 
-              variants={fadeInUp}
-              className="mt-12 sm:mt-16 max-w-2xl"
-            >
-              <p className="text-white/60 text-base sm:text-lg lg:text-xl leading-relaxed">
-                Devsomeware builds scalable software and future-ready brands.
-                We focus on systems, design, and execution that last.
-              </p>
+              <motion.div
+                variants={fadeInUp}
+                className="mb-7 sm:mb-9  flex items-center gap-3"
+              >
+                <span className="h-px w-10 sm:w-14 bg-white/35" />
+               
+                <div className="w-16 sm:w-20 h-16 sm:h-20 relative">
+                  <motion.div
+                  animate={{ y: [0, -8, 0], rotate: [-3, 0, -3] }}
+                  transition={{ duration: 6.2, ease: "easeInOut", repeat: Infinity }}
+                  className="relative"
+                >
+                  <Lottie
+                    animationData={diamondAnimation}
+                    loop={true}
+                    className="w-full h-full opacity-75 mix-blend-screen"
+                  />
+                </motion.div>
+                </div>
+                <span className="h-px w-10 sm:w-14 bg-white/35" />
+              </motion.div>
+
+              <motion.h2
+                variants={fadeInUp}
+                className="
+                  text-white/95 font-medium
+                  font-[family-name:var(--font-museo-moderno)]
+                  text-2xl sm:text-6xl lg:text-[60px] xl:text-[40px]
+                  
+                  max-w-[22ch]
+                "
+              >
+                Scalable products,
+                <br/>
+                disciplined execution.
+              </motion.h2>
+
+              <motion.div 
+                variants={fadeInUp}
+                className="mt-9 sm:mt-12 max-w-[65ch]"
+              >
+                <p className="text-white/65 text-base sm:text-lg lg:text-xl leading-[1.65]">
+                  Devsomeware builds scalable software and future-ready brands.
+                  We focus on systems, design, and execution that last.
+                </p>
+              </motion.div>
+
+              <motion.div 
+                variants={fadeInUp}
+                className="
+                  mt-14 sm:mt-16 pt-8 sm:pt-10 pb-8 sm:pb-10 px-3 sm:px-8 -mx-4 sm:-mx-6
+                  border-2 border-dotted border-white/15 rounded-lg
+                  grid grid-cols-3 gap-0
+                  relative
+                "
+              >
+                <motion.div
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="group cursor-default   px-2 sm:px-4 py-0"
+                >
+                  <p className="text-white/40 text-[9px] sm:text-[11px] tracking-[0.15em] sm:tracking-[0.2em] uppercase mb-2 sm:mb-4">
+                   SAAS PRODUCTS
+                  </p>
+                  <p className="text-white/95 text-[11px] sm:text-sm font-medium leading-[1.4] sm:leading-[1.5] transition-colors duration-300 group-hover:text-white">
+                    Reliable systems designed for long <br/>term scalability.
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="
+                    group cursor-default
+                    px-2 sm:px-4 py-0
+                    border-l-2 border-dotted border-white/15
+                  "
+                >
+                  <p className="text-white/40 text-[9px] sm:text-[11px] tracking-[0.15em] sm:tracking-[0.2em] uppercase mb-2 sm:mb-4">
+                    DIGI SOLUTIONS
+                  </p>
+                  <p className="text-white/95 text-[11px] sm:text-sm font-medium leading-[1.4] sm:leading-[1.5] transition-colors duration-300 group-hover:text-white">
+                    Engineering and design built for real world performance.
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="
+                    group cursor-default 
+                    px-2 sm:px-4 py-0
+                    border-l-2 border-dotted border-white/15 
+                  "
+                >
+                  <p className="text-white/40 text-[9px] sm:text-[11px] tracking-[0.15em] sm:tracking-[0.2em] uppercase mb-2 sm:mb-4">
+                    BRAND SYSTEMS
+                  </p>
+                  <p className="text-white/95 text-[11px] sm:text-sm font-medium leading-[1.4] sm:leading-[1.5] transition-colors duration-300 group-hover:text-white">
+                    Strategic brand development supported by structure and clarity.
+                  </p>
+                </motion.div>
+              </motion.div>
             </motion.div>
 
-            <motion.div 
-              variants={fadeInUp}
-              className="mt-16 sm:mt-20 grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 max-w-3xl"
-            >
-              <motion.div
-                whileHover={{ x: 4 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="group cursor-default"
-              >
-                <p className="text-white/95 text-sm sm:text-base font-medium tracking-wide transition-colors duration-300 group-hover:text-white">
-                  SaaS Products
-                </p>
-                <p className="mt-2 text-white/50 text-sm leading-relaxed transition-colors duration-300 group-hover:text-white/60">
-                  Built to scale
-                </p>
-              </motion.div>
-
-              <motion.div
-                whileHover={{ x: 4 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="group cursor-default"
-              >
-                <p className="text-white/95 text-sm sm:text-base font-medium tracking-wide transition-colors duration-300 group-hover:text-white">
-                  Digital Solutions
-                </p>
-                <p className="mt-2 text-white/50 text-sm leading-relaxed transition-colors duration-300 group-hover:text-white/60">
-                  Designed to perform
-                </p>
-              </motion.div>
-
-              <motion.div
-                whileHover={{ x: 4 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="group cursor-default"
-              >
-                <p className="text-white/95 text-sm sm:text-base font-medium tracking-wide transition-colors duration-300 group-hover:text-white">
-                  Brand Systems
-                </p>
-                <p className="mt-2 text-white/50 text-sm leading-relaxed transition-colors duration-300 group-hover:text-white/60">
-                  Structured to last
-                </p>
-              </motion.div>
-            </motion.div>
-          </motion.div>
+   
+           
+          </div>
         </div>
       </div>
 

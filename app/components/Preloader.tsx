@@ -18,6 +18,17 @@ export default function Preloader() {
 
   return (
     <div className="preloader-container">
+      
+      {/* Background Image */}
+      <div className="preloader-bg"></div>
+
+      {/* FULLSCREEN GLASS */}
+      <div className="preloader-glass"></div>
+
+      {/* Noise */}
+      <div className="preloader-noise"></div>
+
+      {/* Content */}
       <div className="preloader-content">
         
         <div className="logo-container">
@@ -41,7 +52,7 @@ export default function Preloader() {
         .preloader-container {
           position: fixed;
           inset: 0;
-          background: #ffffff;
+          overflow: hidden;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -49,36 +60,65 @@ export default function Preloader() {
           animation: preloaderFade 2.5s ease-in-out forwards;
         }
 
+        /* Background */
+        .preloader-bg {
+          position: absolute;
+          inset: 0;
+          background-image: url('/assets/bg.png');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          z-index: 0;
+        }
+
+        /* FULLSCREEN GLASS LAYER */
+        .preloader-glass {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          background: rgba(0, 0, 0, 0.55);
+          backdrop-filter: blur(140px) saturate(180%);
+          -webkit-backdrop-filter: blur(140px) saturate(180%);
+        }
+
+        /* Noise */
+        .preloader-noise {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          background-image: url('/assets/noise.png');
+          background-repeat: repeat;
+          background-size: 200px 200px;
+          opacity: 0.04;
+          mix-blend-mode: soft-light;
+          pointer-events: none;
+        }
+
+        /* Content */
         .preloader-content {
+          position: relative;
+          z-index: 3;
           display: flex;
           flex-direction: column;
           align-items: center;
           gap: 1.5rem;
-          width: 100%;
-          max-width: 600px;
           padding: 1rem;
-          margin-top: -8vh;
-        }
-
-        .logo-container {
-          width: 100%;
-          display: flex;
-          justify-content: center;
+          margin-top: -6vh;
         }
 
         .preloader-logo {
           width: 100% !important;
           height: auto !important;
-          max-width: 380px;
-          filter: drop-shadow(0 0 40px rgba(0, 0, 0, 0.12));
+          max-width: 340px;
+          filter: drop-shadow(0 0 40px rgba(0, 0, 0, 0.5));
         }
 
         .loading-bar-container {
           width: 100%;
-          max-width: 500px;
+          max-width: 420px;
           height: 4px;
-          background: rgba(0, 0, 0, 0.08);
-          border-radius: 2px;
+          background: rgba(255, 255, 255, 0.15);
+          border-radius: 999px;
           overflow: hidden;
         }
 
@@ -88,9 +128,9 @@ export default function Preloader() {
           background: linear-gradient(
             90deg,
             transparent 0%,
-            #000 20%,
-            #1a1a1a 40%,
-            #000 60%,
+            #ffffff 30%,
+            #f5f5f5 50%,
+            #ffffff 70%,
             transparent 100%
           );
           background-size: 200% 100%;
@@ -118,40 +158,24 @@ export default function Preloader() {
         /* Tablet */
         @media (max-width: 768px) {
           .preloader-logo {
-            max-width: 260px;
+            max-width: 240px;
           }
 
           .loading-bar-container {
-            max-width: 320px;
+            max-width: 280px;
             height: 3px;
           }
         }
 
         /* Mobile */
         @media (max-width: 480px) {
-          .preloader-content {
-            gap: 0.8rem;
-          }
-
           .preloader-logo {
             max-width: 180px;
-            filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.12));
           }
 
           .loading-bar-container {
-            max-width: 220px;
+            max-width: 200px;
             height: 2px;
-          }
-        }
-
-        /* Very small phones */
-        @media (max-width: 360px) {
-          .preloader-logo {
-            max-width: 150px;
-          }
-
-          .loading-bar-container {
-            max-width: 180px;
           }
         }
       `}</style>
