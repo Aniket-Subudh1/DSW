@@ -53,7 +53,7 @@ const ContentSection = () => {
         src="/assets/bg.png"
         alt=""
         fill
-        className="object-cover opacity-20"
+        className="object-cover opacity-10"
         aria-hidden="true"
       />
       <div className="absolute inset-0 backdrop-blur-sm pointer-events-none" />
