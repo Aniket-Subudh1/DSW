@@ -16,6 +16,8 @@
     "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.5.0",
     "@splinetool/react-spline": "^4.1.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.34.0",
@@ -24,7 +26,8 @@
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "tailwind-merge": "^3.4.1"
+    "tailwind-merge": "^3.4.1",
+    "three": "^0.183.1"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^16.1.6",
@@ -37,6 +40,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.183.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "eslint-config-prettier": "^9",
