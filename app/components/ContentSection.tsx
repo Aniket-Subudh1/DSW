@@ -4,6 +4,12 @@ import React, { useEffect, useId, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import Image from "next/image";
 import { useOutsideClick } from "@/hooks/use-outside-click";
+import Lottie from "lottie-react";
+import developerAnim from "@/public/assets/Coding Development.json";
+import futureTechAnim from "@/public/assets/Future tech Ui.json";
+import cloudAnim from "@/public/assets/cloud.json";
+import uiUxAnim from "@/public/assets/ui ux.json";
+import deliveryImage from "@/public/assets/delivery.png";
 import gsap from "gsap";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -163,56 +169,24 @@ const Label = ({ children }: { children: React.ReactNode }) => (
 
 const ServiceAnim = ({ index }: { index: number }) => {
   const anims = [
-    <svg key="code" viewBox="0 0 32 32" className="w-full h-full" style={{ padding: '20%' }}>
-      <g fill="#000" opacity="0.18">
-        <path d="M10.7,8.3c-0.4-0.4-1-0.4-1.4,0l-7,7c-0.4,0.4-0.4,1,0,1.4l7,7C9.5,23.9,9.7,24,10,24s0.5-0.1,0.7-0.3c0.4-0.4,0.4-1,0-1.4L4.4,16l6.3-6.3C11.1,9.3,11.1,8.7,10.7,8.3z"/>
-        <path d="M29.7,15.3l-7-7c-0.4-0.4-1-0.4-1.4,0s-0.4,1,0,1.4l6.3,6.3l-6.3,6.3c-0.4,0.4-0.4,1,0,1.4c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3l7-7C30.1,16.3,30.1,15.7,29.7,15.3z"/>
-        <path d="M20.3,3.1c-0.5-0.2-1.1,0.1-1.3,0.6l-8,24c-0.2,0.5,0.1,1.1,0.6,1.3c0.1,0,0.2,0.1,0.3,0.1c0.4,0,0.8-0.3,0.9-0.7l8-24C21.1,3.8,20.8,3.2,20.3,3.1z"/>
-        <animateTransform attributeName="transform" type="translate" values="0,0; 0,-0.5; 0,0" dur="6s" repeatCount="indefinite"/>
-      </g>
-    </svg>,
+    <div key="developer" className="w-full h-full" style={{ opacity: 0.8 }}>
+      <Lottie animationData={developerAnim} loop autoplay style={{ width: "100%", height: "100%" }} />
+    </div>,
 
-    <svg key="circuit" viewBox="0 0 24 24" className="w-full h-full" style={{ padding: '18%' }}>
-      <g fill="#000" opacity="0.16">
-        <path d="M21 6h.046l-5.25 9h-.944L10 9.455V7H7v2.926L1.862 18H0v3h3v-2.926L8.138 10h1.01L14 15.545V18h3v-3h-.046l5.25-9H24V3h-3zM8 8h1v1H8zM2 20H1v-1h1zm14-3h-1v-1h1zm7-13v1h-1V4z"/>
-        <animateTransform attributeName="transform" type="translate" values="0,0; 0.3,-0.2; 0,0; -0.2,0.2; 0,0" dur="10s" repeatCount="indefinite"/>
-      </g>
-      <circle cx="16" cy="16" r="1" fill="#000" opacity="0.14">
-        <animate attributeName="r" values="0.5;2;0.5" dur="4s" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values="0.18;0.06;0.18" dur="4s" repeatCount="indefinite"/>
-      </circle>
-    </svg>,
+    <div key="futuretech" className="w-full h-full" style={{ opacity: 0.8 }}>
+      <Lottie animationData={futureTechAnim} loop autoplay style={{ width: "100%", height: "100%" }} />
+    </div>,
 
-    <svg key="crosshair" viewBox="0 0 32 32" className="w-full h-full" style={{ padding: '16%' }}>
-      <g fill="#000" opacity="0.16">
-        <path d="M28.857 18c-0.8 5.65-5.227 10.125-10.857 10.997v1.003h-4v-1.003c-5.63-0.871-10.057-5.347-10.858-10.997h-1.142v-4h1.188c0.924-5.493 5.293-9.81 10.812-10.664v-1.336h4v1.336c5.52 0.854 9.887 5.171 10.812 10.664h1.188v4h-1.143zM15 29h2v-2h-2v2zM3 15v2h2v-2h-2zM17 3h-2v2h2v-2zM18 4.852v1.148h-4v-1.148c-4.69 0.824-8.401 4.483-9.292 9.148h1.292v4h-1.346c0.775 4.822 4.545 8.638 9.346 9.481v-1.481h4v1.481c4.801-0.844 8.571-4.659 9.346-9.481h-1.346v-4h1.292c-0.892-4.665-4.602-8.324-9.292-9.148zM29 15h-2v2h2v-2z"/>
-        <animateTransform attributeName="transform" type="rotate" from="0 16 16" to="360 16 16" dur="45s" repeatCount="indefinite"/>
-      </g>
-    </svg>,
+    <div key="cloud" className="w-full h-full" style={{ opacity: 0.8 }}>
+      <Lottie animationData={cloudAnim} loop autoplay style={{ width: "100%", height: "100%" }} />
+    </div>,
 
-    <svg key="dots" viewBox="0 0 15 15" className="w-full h-full" fill="none" style={{ padding: '22%' }}>
-      <g opacity="0.22">
-        <path d="M2 2L13 13" stroke="#000" strokeWidth="0.6"/>
-        <circle cx="1.5" cy="1.5" r="1" fill="#000"/>
-        <circle cx="13.5" cy="13.5" r="1" fill="#000"/>
-        <circle cx="1.5" cy="1.5" r="2" fill="none" stroke="#000" strokeWidth="0.3">
-          <animate attributeName="r" values="1.5;3;1.5" dur="4s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values="0.8;0;0.8" dur="4s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="13.5" cy="13.5" r="2" fill="none" stroke="#000" strokeWidth="0.3">
-          <animate attributeName="r" values="1.5;3;1.5" dur="4s" begin="2s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values="0.8;0;0.8" dur="4s" begin="2s" repeatCount="indefinite"/>
-        </circle>
-        <circle r="0.4" fill="#000">
-          <animateMotion dur="3s" repeatCount="indefinite" path="M2,2 L13,13"/>
-          <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite"/>
-        </circle>
-        <animateTransform attributeName="transform" type="translate" values="0,0; 0.2,-0.2; 0,0" dur="8s" repeatCount="indefinite"/>
-      </g>
-    </svg>,
+    <div key="uiux" className="w-full h-full" style={{ opacity: 0.8 }}>
+      <Lottie animationData={uiUxAnim} loop autoplay style={{ width: "100%", height: "100%" }} />
+    </div>,
 
-    <svg key="solar" viewBox="0 0 512 512" className="w-full h-full" style={{ padding: '12%' }}>
-      <g fill="#000" opacity="0.15">
+    <svg key="solar" viewBox="0 0 512 512" className="w-full h-full" style={{ padding: '8%' }}>
+      <g fill="#000" opacity="0.28">
         <path d="M346.152,235.112c-1.074-4.652-5.719-7.556-10.367-6.478c-4.652,1.074-7.552,5.716-6.478,10.367c1.278,5.537,1.927,11.256,1.927,16.998c0,41.485-33.75,75.235-75.235,75.235c-41.485,0-75.235-33.75-75.235-75.235c0-41.485,33.75-75.235,75.235-75.235c25.033,0,48.356,12.403,62.391,33.177c2.672,3.956,8.045,4.995,12.002,2.324c3.957-2.673,4.996-8.046,2.325-12.003c-17.254-25.539-45.934-40.786-76.717-40.786c-51.018,0-92.524,41.506-92.524,92.524s41.506,92.524,92.524,92.524c51.018,0,92.524-41.506,92.524-92.524C348.523,248.95,347.726,241.923,346.152,235.112z"/>
         <path d="M430.911,34.115c-25.902,0-46.975,21.073-46.975,46.974c0,25.902,21.073,46.974,46.975,46.974c25.902,0,46.974-21.072,46.974-46.974C477.885,55.188,456.813,34.115,430.911,34.115z M430.911,110.774c-16.369,0-29.686-13.317-29.686-29.685s13.317-29.685,29.686-29.685c16.368,0,29.685,13.317,29.685,29.685C460.596,97.458,447.279,110.774,430.911,110.774z"/>
         <path d="M255.999,380.397c-20.048,0-36.357,16.309-36.357,36.357c0,20.047,16.309,36.356,36.357,36.356c20.048,0,36.357-16.309,36.357-36.356C292.357,396.706,276.048,380.397,255.999,380.397z M255.999,435.821c-10.514,0-19.068-8.553-19.068-19.067c0-10.515,8.555-19.068,19.068-19.068c10.514,0,19.068,8.553,19.068,19.068C275.068,427.268,266.513,435.821,255.999,435.821z"/>
@@ -256,39 +230,37 @@ const HeadlineCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement |
   return (
     <BentoCard innerRef={innerRef} className="p-3 sm:p-4 !bg-black !border-black relative overflow-hidden">
       <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 600 200">
-        {[50,120].map((y,i) => (
+        {[58, 126].map((y, i) => (
           <g key={`h-${i}`}>
-            <line x1="0" y1={y} x2="600" y2={y} stroke="rgba(255,255,255,0.10)" strokeWidth="0.5" />
-            <circle r="3" fill="rgba(255,255,255,0.60)">
-              <animateMotion dur={`${3.5 + i}s`} begin={`${i * 1.2}s`} repeatCount="indefinite" path={`M0,${y} L600,${y}`} />
-              <animate attributeName="opacity" values="0;1;1;0" dur={`${3.5 + i}s`} begin={`${i * 1.2}s`} repeatCount="indefinite" />
+            <line x1="0" y1={y} x2="600" y2={y} stroke="rgba(255,255,255,0.07)" strokeWidth="0.5" />
+            <circle r="2" fill="rgba(255,255,255,0.34)">
+              <animateMotion dur={`${10 + i * 1.5}s`} begin={`${i * 1.3}s`} repeatCount="indefinite" path={`M0,${y} L600,${y}`} />
+              <animate attributeName="opacity" values="0;0.6;0.6;0" dur={`${10 + i * 1.5}s`} begin={`${i * 1.3}s`} repeatCount="indefinite" />
             </circle>
-            <circle r="12" fill="rgba(255,255,255,0.10)">
-              <animateMotion dur={`${3.5 + i}s`} begin={`${i * 1.2}s`} repeatCount="indefinite" path={`M0,${y} L600,${y}`} />
-              <animate attributeName="opacity" values="0;0.6;0.6;0" dur={`${3.5 + i}s`} begin={`${i * 1.2}s`} repeatCount="indefinite" />
+            <circle r="5" fill="rgba(255,255,255,0.04)">
+              <animateMotion dur={`${10 + i * 1.5}s`} begin={`${i * 1.3}s`} repeatCount="indefinite" path={`M0,${y} L600,${y}`} />
+              <animate attributeName="opacity" values="0;0.28;0.28;0" dur={`${10 + i * 1.5}s`} begin={`${i * 1.3}s`} repeatCount="indefinite" />
             </circle>
           </g>
         ))}
-        {[200,400].map((x,i) => (
+
+        {[200, 400].map((x, i) => (
           <g key={`v-${i}`}>
-            <line x1={x} y1="0" x2={x} y2="200" stroke="rgba(255,255,255,0.08)" strokeWidth="0.5" />
-            <circle r="3" fill="rgba(255,255,255,0.55)">
-              <animateMotion dur={`${4 + i}s`} begin={`${0.5 + i * 1.5}s`} repeatCount="indefinite" path={`M${x},0 L${x},200`} />
-              <animate attributeName="opacity" values="0;1;1;0" dur={`${4 + i}s`} begin={`${0.5 + i * 1.5}s`} repeatCount="indefinite" />
+            <line x1={x} y1="0" x2={x} y2="200" stroke="rgba(255,255,255,0.05)" strokeWidth="0.5" />
+            <circle r="1.8" fill="rgba(255,255,255,0.30)">
+              <animateMotion dur={`${12 + i * 1.8}s`} begin={`${1 + i * 1.8}s`} repeatCount="indefinite" path={`M${x},0 L${x},200`} />
+              <animate attributeName="opacity" values="0;0.55;0.55;0" dur={`${12 + i * 1.8}s`} begin={`${1 + i * 1.8}s`} repeatCount="indefinite" />
             </circle>
           </g>
         ))}
-        <circle cx="300" cy="100" r="100" fill="rgba(255,255,255,0.05)">
-          <animate attributeName="r" values="60;120;60" dur="6s" repeatCount="indefinite" />
-        </circle>
       </svg>
       <div className="absolute inset-[4px] rounded-xl border border-dashed border-white/[0.06] pointer-events-none" />
       <div className="relative z-10">
         <p className="text-xs sm:text-sm md:text-base font-bold text-white leading-[1.3] font-[family-name:var(--font-museo-moderno)]">
-          We design, build and ship{" "}
-          <span className="text-white/50">production-ready software</span>{" "}
-          - from idea to live product.
-        </p>
+  We design, build and deliver{" "}
+  <span className="text-white/50">reliable, production-ready software</span>{" "}
+  - turning ideas into scalable digital products.
+</p>
         <div className="mt-3 sm:mt-4 grid grid-cols-3 divide-x divide-dashed divide-white/[0.10] w-fit">
           {stats.map((s, i) => (
             <div key={s.label} className={`flex flex-col gap-1.5 ${i > 0 ? "pl-3 sm:pl-4" : ""} ${i < 2 ? "pr-3 sm:pr-4" : ""}`}>
@@ -314,12 +286,14 @@ const HowWeWorkCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement 
     const tl = gsap.timeline({
       scrollTrigger: { trigger: lineRef.current, start: "top 88%", once: true },
     });
-    tl.fromTo(lineRef.current,
+    tl.fromTo(
+      lineRef.current,
       { attr: { x2: 30 } },
       { attr: { x2: 270 }, duration: 1.1, ease: "power2.inOut" }
     );
     nodeRefs.current.forEach((node, i) => {
-      tl.fromTo(node,
+      tl.fromTo(
+        node,
         { attr: { r: 0 } },
         { attr: { r: 10 }, duration: 0.3, ease: "back.out(3)" },
         0.1 + i * 0.35
@@ -328,21 +302,23 @@ const HowWeWorkCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement 
   }, []);
 
   const steps = [
-    { x: 30,  num: "01", label: "DISCOVER",  sub: "Scope & plan"     },
-    { x: 150, num: "02", label: "BUILD",     sub: "Sprint delivery"  },
-    { x: 270, num: "03", label: "LAUNCH",    sub: "Ship & iterate"   },
+    { x: 30, num: "01", label: "DISCOVER", sub: "Scope & plan" },
+    { x: 150, num: "02", label: "BUILD", sub: "Sprint delivery" },
+    { x: 270, num: "03", label: "LAUNCH", sub: "Ship & iterate" },
   ];
 
   return (
     <BentoCard innerRef={innerRef} className="sm:col-span-2 lg:col-span-2 p-2.5 sm:p-3 flex flex-col">
-      <Label>How We Work</Label>
+      <div className="flex items-center gap-2 font-[family-name:var(--font-museo-moderno)] font-bold uppercase tracking-[0.14em] text-[15px] sm:text-[17px] leading-none mb-1">
+        <span className="text-black/22 text-[0.88em]">{"{"}</span>
+        <span className="text-black/78">How We Work</span>
+        <span className="text-black/22 text-[0.88em]">{"}"}</span>
+      </div>
       <p className="text-[10px] sm:text-xs text-black/50 mt-0.5 mb-2">Our three-phase delivery framework</p>
       <div className="flex-1 flex items-center w-full">
         <svg viewBox="0 0 300 80" fill="none" className="w-full overflow-visible">
-          <line x1="30" y1="22" x2="270" y2="22"
-            stroke="rgba(0,0,0,0.20)" strokeWidth="1.5" strokeDasharray="5 4" />
-          <line ref={lineRef} x1="30" y1="22" x2="30" y2="22"
-            stroke="rgba(0,0,0,0.70)" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="30" y1="22" x2="270" y2="22" stroke="rgba(0,0,0,0.20)" strokeWidth="1.5" strokeDasharray="5 4" />
+          <line ref={lineRef} x1="30" y1="22" x2="30" y2="22" stroke="rgba(0,0,0,0.70)" strokeWidth="2.5" strokeLinecap="round" />
           <circle r="4" fill="rgba(0,0,0,0.55)">
             <animateMotion dur="2.5s" repeatCount="indefinite" path="M30,22 L270,22" />
             <animate attributeName="opacity" values="0;1;1;0" dur="2.5s" repeatCount="indefinite" />
@@ -357,22 +333,14 @@ const HowWeWorkCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement 
                 <animate attributeName="r" values="12;20;12" dur={`${2.5 + i * 0.4}s`} repeatCount="indefinite" />
                 <animate attributeName="opacity" values="0.6;0;0.6" dur={`${2.5 + i * 0.4}s`} repeatCount="indefinite" />
               </circle>
-              <circle
-                ref={(el) => { nodeRefs.current[i] = el; }}
-                cx={s.x} cy="22" r="0"
-                fill="rgba(0,0,0,0.85)"
-              />
-              <text x={s.x} y="26" textAnchor="middle"
-                fontSize="8" fontWeight="800" fill="white" fontFamily="inherit">
+              <circle ref={(el) => { nodeRefs.current[i] = el; }} cx={s.x} cy="22" r="0" fill="rgba(0,0,0,0.85)" />
+              <text x={s.x} y="26" textAnchor="middle" fontSize="8" fontWeight="800" fill="white" fontFamily="inherit">
                 {s.num}
               </text>
-              <text x={s.x} y="48" textAnchor="middle"
-                fontSize="10" fontWeight="800" fill="rgba(0,0,0,0.80)"
-                letterSpacing="0.08em" fontFamily="inherit">
+              <text x={s.x} y="48" textAnchor="middle" fontSize="10" fontWeight="800" fill="rgba(0,0,0,0.80)" letterSpacing="0.08em" fontFamily="inherit">
                 {s.label}
               </text>
-              <text x={s.x} y="62" textAnchor="middle"
-                fontSize="9" fill="rgba(0,0,0,0.45)" fontFamily="inherit">
+              <text x={s.x} y="62" textAnchor="middle" fontSize="9" fill="rgba(0,0,0,0.45)" fontFamily="inherit">
                 {s.sub}
               </text>
             </g>
@@ -384,69 +352,22 @@ const HowWeWorkCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement 
 };
 
 const DeliveryCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement | null> }) => {
-  const barRefs = useRef<(SVGRectElement | null)[]>([]);
-
-  const rows: { label: string; x: number; w: number; shade: string }[] = [
-    { label: "Discovery", x: 10,  w: 60,  shade: "rgba(0,0,0,0.25)" },
-    { label: "Design",    x: 55,  w: 80,  shade: "rgba(0,0,0,0.40)" },
-    { label: "Dev",       x: 110, w: 120, shade: "rgba(0,0,0,0.75)" },
-    { label: "QA+Launch", x: 215, w: 70,  shade: "rgba(0,0,0,0.50)" },
-  ];
-
-  useEffect(() => {
-    rows.forEach((r, i) => {
-      const bar = barRefs.current[i];
-      if (!bar) return;
-      gsap.fromTo(bar,
-        { attr: { width: 0 } },
-        {
-          attr: { width: r.w },
-          duration: 0.7, ease: "power3.out",
-          delay: i * 0.12,
-          scrollTrigger: { trigger: bar, start: "top 90%", once: true },
-        }
-      );
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <BentoCard innerRef={innerRef} className="sm:col-span-2 lg:col-span-2 p-2.5 sm:p-3 flex flex-col">
-      <Label>Delivery Timeline</Label>
-      <p className="text-[10px] sm:text-xs text-black/50 font-medium mt-0.5 mb-2">Typical MVP: 4 -6 weeks</p>
-      <svg viewBox="0 0 300 112" fill="none" className="w-full flex-1">
-        {[0,1,2,3,4].map((w) => (
-          <g key={w}>
-            <line x1={w * 70 + 10} y1="0" x2={w * 70 + 10} y2="88"
-              stroke="rgba(0,0,0,0.10)" strokeWidth="1" strokeDasharray="3 3" />
-            <text x={w * 70 + 10} y="106" textAnchor="middle" fontSize="6"
-              fill="rgba(0,0,0,0.45)" fontWeight="700" fontFamily="inherit">W{w + 1}</text>
-          </g>
-        ))}
-        {rows.map((r, i) => {
-          const y = i * 22;
-          return (
-            <g key={r.label}>
-              <text x="0" y={y + 12} fontSize="7"
-                fill="rgba(0,0,0,0.70)" fontWeight="800"
-                letterSpacing="0.04em" fontFamily="inherit">
-                {r.label.toUpperCase()}
-              </text>
-              <rect x={r.x} y={y + 16} width={280 - r.x} height="6"
-                rx="3" fill="rgba(0,0,0,0.08)" />
-              <rect
-                ref={(el) => { barRefs.current[i] = el; }}
-                x={r.x} y={y + 16}
-                width="0" height="6" rx="3"
-                fill={r.shade}
-              />
-              <rect x={r.x} y={y + 15} width={r.w} height="8" rx="4" fill="none" stroke="rgba(0,0,0,0.18)" strokeWidth="0.5">
-                <animate attributeName="opacity" values="0;0.5;0" dur={`${2.5 + i * 0.4}s`} repeatCount="indefinite" />
-              </rect>
-            </g>
-          );
-        })}
-      </svg>
+      <div className="flex items-center gap-2 font-[family-name:var(--font-museo-moderno)] font-bold uppercase tracking-[0.14em] text-[15px] sm:text-[17px] leading-none mb-1">
+        <span className="text-black/22 text-[0.88em]">{"{"}</span>
+        <span className="text-black/78">Delivery Timeline</span>
+        <span className="text-black/22 text-[0.88em]">{"}"}</span>
+      </div>
+      <p className="text-[10px] sm:text-xs text-black/50 font-medium mt-0.5 mb-2">Typical MVP: 4 - 6 weeks</p>
+      <div className="w-full">
+        <Image
+          src={deliveryImage}
+          alt="Delivery timeline chart"
+          className="block w-full h-auto"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 66vw, 50vw"
+        />
+      </div>
     </BentoCard>
   );
 };
@@ -510,7 +431,11 @@ const EngagementCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement
 
   return (
     <BentoCard innerRef={innerRef} className="sm:col-span-2 md:col-span-2 p-2.5 sm:p-3 flex flex-col">
-      <Label>Engagement Models</Label>
+      <div className="flex items-center gap-2 font-[family-name:var(--font-museo-moderno)] font-bold uppercase tracking-[0.14em] text-[15px] sm:text-[17px] leading-none mb-1">
+        <span className="text-black/22 text-[0.88em]">{"{"}</span>
+        <span className="text-black/78">Engagement Models</span>
+        <span className="text-black/22 text-[0.88em]">{"}"}</span>
+      </div>
       <p className="text-[10px] sm:text-xs text-black/50 mt-0.5 mb-2">Three ways to work with us</p>
       <div className="flex flex-col gap-1.5 flex-1 justify-center">
         {models.map((m, i) => (
@@ -528,7 +453,7 @@ const EngagementCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement
               </div>
               <span className="text-[10px] text-black/50 mt-0.5 leading-snug">{m.detail}</span>
             </div>
-            <span className="shrink-0 text-lg font-black text-black/[0.05] font-[family-name:var(--font-museo-moderno)] leading-none">{m.tag}</span>
+            <span className="shrink-0 text-lg font-black text-black/40 font-[family-name:var(--font-museo-moderno)] leading-none">{m.tag}</span>
           </div>
         ))}
       </div>
@@ -574,7 +499,11 @@ const DeliverablesCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivEleme
         </g>
       </svg>
       <div className="relative z-10 flex flex-col flex-1">
-        <Label>What You Get</Label>
+        <div className="flex items-center gap-2 font-[family-name:var(--font-museo-moderno)] font-bold uppercase tracking-[0.14em] text-[15px] sm:text-[17px] leading-none mb-1">
+          <span className="text-black/22 text-[0.88em]">{"{"}</span>
+          <span className="text-black/78">What You Get</span>
+          <span className="text-black/22 text-[0.88em]">{"}"}</span>
+        </div>
         <p className="text-[10px] sm:text-xs text-black/50 mt-0.5 mb-2">Every engagement includes</p>
         <ul ref={listRef} className="flex flex-col gap-1.5 flex-1 justify-center">
           {items.map((text) => (
@@ -646,11 +575,14 @@ const ServiceTile = ({
         background: "rgba(255,255,255,0.92)",
         backdropFilter: "blur(8px)",
       }}
-      className="relative flex flex-col justify-between p-3 sm:p-3 rounded-xl cursor-pointer group overflow-hidden min-h-[130px] sm:min-h-[120px]"
+      className="relative flex flex-col justify-between p-3 sm:p-3 rounded-xl cursor-pointer group overflow-hidden min-h-[220px] sm:min-h-[120px]"
     >
-      <div className="absolute inset-0 pointer-events-none opacity-80">
+      <div className="absolute inset-0 pointer-events-none scale-[1.28] sm:scale-105 lg:scale-100 origin-center">
         <ServiceAnim index={index} />
       </div>
+
+      <div className="absolute inset-0 pointer-events-none z-[1]"
+        style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 38%, rgba(255,255,255,0.82) 90%, rgba(255,255,255,0.97) 98%)" }} />
 
       <span ref={shimmerRef} aria-hidden="true" className="absolute inset-0 rounded-inherit pointer-events-none z-[3]" style={{ background: "transparent" }} />
 
@@ -700,9 +632,9 @@ const CloseIcon = () => (
 
 const services = [
   {
-    title: "Full-Stack Development",
+    title: "{ Full-Stack Development }",
     description: "Modern Web Applications",
-    src: "https://images.unsplash.com/photo-1537432376769-00f5c2f4c8d2?w=500&q=80",
+    src: "./banner/fbanner.png",
     ctaText: "Explore",
     ctaLink: "#services",
     content: () => (
@@ -719,9 +651,9 @@ const services = [
     ),
   },
   {
-    title: "Product Prototyping",
+    title: "{ Product Prototyping }",
     description: "From Idea to Working Product",
-    src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&q=80",
+    src: "./banner/pptye.png",
     ctaText: "Explore",
     ctaLink: "#services",
     content: () => (
@@ -738,9 +670,9 @@ const services = [
     ),
   },
   {
-    title: "Cloud & Deployment",
+    title: "{ Cloud & Deployment }",
     description: "Reliable Infrastructure",
-    src: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=500&q=80",
+    src: "./banner/cloud.png",
     ctaText: "Explore",
     ctaLink: "#services",
     content: () => (
@@ -756,9 +688,9 @@ const services = [
     ),
   },
   {
-    title: "UI / UX Design",
+    title: "{ UI / UX Design }",
     description: "User-Focused Interfaces",
-    src: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&q=80",
+    src: "./banner/ui.png",
     ctaText: "Explore",
     ctaLink: "#services",
     content: () => (
@@ -774,9 +706,9 @@ const services = [
     ),
   },
   {
-    title: "API Development",
+    title: "{ API Development }",
     description: "Reliable Integrations",
-    src: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=500&q=80",
+    src: "./banner/api.png",
     ctaText: "Explore",
     ctaLink: "#services",
     content: () => (
@@ -933,10 +865,10 @@ const ContentSection = () => {
         )}
       </AnimatePresence>
 
-      <div className="relative z-20 w-full flex flex-col">
+      <div className="relative z-20 w-full flex flex-col px-1.5 sm:px-0">
         <ServicesHeading />
 
-        <div className="w-full flex  mb-2">
+        <div className="w-full flex mb-2">
           <div className="w-full sm:w-[86%] lg:w-[52%] xl:w-[50%]">
             <HeadlineCard innerRef={bentoPanelRef.headline} />
           </div>
