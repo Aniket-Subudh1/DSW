@@ -1,18 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
+import CraftReveal from '@/app/components/CraftReveal';
 import { Hero } from '@/app/components/Hero';
 import ContentSection from '@/app/components/ContentSection';
 import Preloader from '@/app/components/Preloader';
 import ScrollRibbon from '@/app/components/ScrollRibbon';
 
+const emptySubscribe = () => () => {};
+
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
 
   useEffect(() => {
-    setMounted(true);
-    
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2500);
@@ -33,6 +34,7 @@ export default function Home() {
       <Hero />
       <ScrollRibbon />
       <ContentSection />
+       <CraftReveal /> 
     </main>
   );
 }
