@@ -524,13 +524,13 @@ const DeliverablesCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivEleme
 
 interface ServiceTileProps {
   service: (typeof services)[number];
-  layoutId: string; imageLayoutId: string; titleLayoutId: string;
+  layoutId: string; titleLayoutId: string;
   descLayoutId: string; btnLayoutId: string;
   onClick: () => void; index: number;
 }
 
 const ServiceTile = ({
-  service, layoutId, imageLayoutId, titleLayoutId, descLayoutId, btnLayoutId, onClick, index,
+  service, layoutId, titleLayoutId, descLayoutId, btnLayoutId, onClick, index,
 }: ServiceTileProps) => {
   const cardRef = useRef<HTMLLIElement>(null);
   const shimmerRef = useRef<HTMLSpanElement>(null);
@@ -589,13 +589,13 @@ const ServiceTile = ({
       <div className="absolute inset-[4px] rounded-lg border border-dashed border-black/[0.05] pointer-events-none z-[2]" />
 
       <div className="relative z-10 flex items-start justify-between">
-        <motion.div layoutId={imageLayoutId} className="shrink-0">
-          <div style={{ borderRadius: "8px", overflow: "hidden", width: 28, height: 28, position: "relative" }}>
+        <div className="shrink-0">
+          <div style={{ borderRadius: "8px", overflow: "hidden", width: 40, height: 40, position: "relative" }}>
             <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,80,180,0.18) 0%, rgba(0,40,120,0.32) 100%)", mixBlendMode: "multiply", zIndex: 1, borderRadius: "inherit", pointerEvents: "none" }} />
-            <img width={28} height={28} src={service.src} alt={service.title}
+            <img width={40} height={40} src={service.src} alt={service.title}
               style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block", filter: "saturate(0.8) brightness(0.92)" }} />
           </div>
-        </motion.div>
+        </div>
         <motion.span layoutId={btnLayoutId}
           className="shrink-0 relative z-10 px-2 py-0.5 text-[7px] rounded-full font-bold tracking-[0.12em] uppercase border border-dashed border-black/[0.15] text-black/45 group-hover:border-black/50 group-hover:text-black/70 bg-white/60 backdrop-blur-sm transition-colors duration-300">
           {service.ctaText}
@@ -809,7 +809,7 @@ const ContentSection = () => {
               style={{ background: "#fff", border: "1px dashed rgba(0,0,0,0.18)", boxShadow: "0 24px 64px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.08)" }}
               className="w-full max-w-[500px] max-h-[90dvh] flex flex-col rounded-2xl overflow-hidden"
             >
-              <motion.div layoutId={`image-${active.title}-${id}`}
+              <div
                 className="relative overflow-hidden cursor-crosshair shrink-0"
                 style={{ borderBottom: "1px dashed rgba(0,0,0,0.12)" }}
                 onMouseEnter={() => { if (modalDisplaceRef.current) gsap.to(modalDisplaceRef.current, { attr: { scale: 10 }, duration: 0.55, ease: "power2.out" }); }}
@@ -826,8 +826,8 @@ const ContentSection = () => {
                   </defs>
                 </svg>
                 <div style={{ margin: "-12px", filter: "url(#modal-water)" }}>
-                  <img width={500} height={220} src={active.src} alt={active.title}
-                    style={{ width: "100%", height: "clamp(7rem, 24vw, 12rem)", objectFit: "cover", objectPosition: "center", display: "block", filter: "saturate(0.9) brightness(0.94)" }} />
+                  <img width={500} height={280} src={active.src} alt={active.title}
+                    style={{ width: "calc(100% + 24px)", height: "200px", objectFit: "cover", objectPosition: "center", display: "block", filter: "saturate(0.9) brightness(0.94)" }} />
                 </div>
                 <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,80,180,0.08) 0%, rgba(0,40,120,0.20) 100%)", mixBlendMode: "multiply", pointerEvents: "none" }} />
                 <motion.button layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.05 } }}
@@ -835,7 +835,7 @@ const ContentSection = () => {
                   onClick={() => setActive(null)}>
                   <CloseIcon />
                 </motion.button>
-              </motion.div>
+              </div>
 
               <div className="overflow-y-auto flex-1 overscroll-contain">
                 <div className="flex justify-between items-start p-4 sm:p-5 gap-3" style={{ borderBottom: "1px dashed rgba(0,0,0,0.09)" }}>
@@ -881,7 +881,6 @@ const ContentSection = () => {
               key={`card-${services[0].title}-${id}`}
               service={services[0]} index={0}
               layoutId={`card-${services[0].title}-${id}`}
-              imageLayoutId={`image-${services[0].title}-${id}`}
               titleLayoutId={`title-${services[0].title}-${id}`}
               descLayoutId={`description-${services[0].title}-${id}`}
               btnLayoutId={`button-${services[0].title}-${id}`}
@@ -891,7 +890,6 @@ const ContentSection = () => {
               key={`card-${services[1].title}-${id}`}
               service={services[1]} index={1}
               layoutId={`card-${services[1].title}-${id}`}
-              imageLayoutId={`image-${services[1].title}-${id}`}
               titleLayoutId={`title-${services[1].title}-${id}`}
               descLayoutId={`description-${services[1].title}-${id}`}
               btnLayoutId={`button-${services[1].title}-${id}`}
@@ -906,7 +904,6 @@ const ContentSection = () => {
               key={`card-${services[2].title}-${id}`}
               service={services[2]} index={2}
               layoutId={`card-${services[2].title}-${id}`}
-              imageLayoutId={`image-${services[2].title}-${id}`}
               titleLayoutId={`title-${services[2].title}-${id}`}
               descLayoutId={`description-${services[2].title}-${id}`}
               btnLayoutId={`button-${services[2].title}-${id}`}
@@ -916,7 +913,6 @@ const ContentSection = () => {
               key={`card-${services[3].title}-${id}`}
               service={services[3]} index={3}
               layoutId={`card-${services[3].title}-${id}`}
-              imageLayoutId={`image-${services[3].title}-${id}`}
               titleLayoutId={`title-${services[3].title}-${id}`}
               descLayoutId={`description-${services[3].title}-${id}`}
               btnLayoutId={`button-${services[3].title}-${id}`}
@@ -929,7 +925,6 @@ const ContentSection = () => {
               key={`card-${services[4].title}-${id}`}
               service={services[4]} index={4}
               layoutId={`card-${services[4].title}-${id}`}
-              imageLayoutId={`image-${services[4].title}-${id}`}
               titleLayoutId={`title-${services[4].title}-${id}`}
               descLayoutId={`description-${services[4].title}-${id}`}
               btnLayoutId={`button-${services[4].title}-${id}`}
