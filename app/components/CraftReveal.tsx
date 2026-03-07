@@ -1,11 +1,32 @@
 "use client";
 
 import { CSSProperties, useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
+
+type VBorderProps = {
+  pos: "left" | "right";
+  offset: number;
+  overhang: number;
+  opacity: number;
+  delay: number;
+};
+const VBorder = ({ pos, offset, overhang, opacity, delay }: VBorderProps) => (
+  <motion.span
+    initial={{ scaleY: 0 }}
+    animate={{ scaleY: 1 }}
+    transition={{ duration: 1.2, ease: [0.33, 1, 0.68, 1], delay }}
+    style={{
+      position: "absolute", display: "block",
+      [pos]: offset, top: -overhang, bottom: -overhang,
+      width: "2px", backgroundColor: `rgba(0,0,0,${opacity})`, transformOrigin: "top",
+    }}
+  />
+);
 
 const leftPoints = [
   "Product-first discovery",
@@ -24,7 +45,7 @@ const rightPoints = [
 type MaskStyle = CSSProperties & { [key: string]: string | number | undefined };
 
 const maskStyle: MaskStyle = {
-  "--mask-size": "18%",
+  "--mask-size": "42%",
   WebkitMaskImage: "url('/logo/logo-v2.png')",
   maskImage: "url('/logo/logo-v2.png')",
   WebkitMaskRepeat: "no-repeat",
@@ -49,12 +70,12 @@ const bulletIcon = (
       cx="10"
       cy="10"
       r="8"
-      stroke="rgba(255,255,255,0.42)"
+      stroke="rgba(0,0,0,0.38)"
       strokeWidth="1.3"
     />
     <path
       d="M6.4 10.3L8.7 12.6L13.8 7.5"
-      stroke="rgba(255,255,255,0.92)"
+      stroke="rgba(0,0,0,0.82)"
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -74,7 +95,7 @@ function BulletList({
       {items.map((item) => (
         <li
           key={item}
-          className={`art-fade flex items-center gap-2.5 text-[13px] font-medium leading-[1.45] text-white/78 sm:text-[14px] ${align === "right" ? "lg:flex-row-reverse lg:text-right" : ""}`}
+          className={`art-fade flex items-center gap-2.5 text-[13px] font-medium leading-[1.45] text-black/75 sm:text-[14px] ${align === "right" ? "lg:flex-row-reverse lg:text-right" : ""}`}
         >
           {bulletIcon}
           <span>{item}</span>
@@ -90,11 +111,14 @@ export default function CraftReveal() {
   const headingRef = useRef<HTMLDivElement>(null);
   const watermarkRef = useRef<HTMLHeadingElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
+  const logoRef = useRef<HTMLDivElement>(null);
   const maskRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const mobileBulletsRef = useRef<HTMLDivElement>(null);
   const overlayTitleRef = useRef<HTMLDivElement>(null);
+  const borderRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(borderRef, { once: true, margin: "-60px" });
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -102,6 +126,7 @@ export default function CraftReveal() {
     const heading = headingRef.current;
     const watermark = watermarkRef.current;
     const frame = frameRef.current;
+    const logo = logoRef.current;
     const mask = maskRef.current;
     const image = imageRef.current;
     const content = contentRef.current;
@@ -112,6 +137,7 @@ export default function CraftReveal() {
       !heading ||
       !watermark ||
       !frame ||
+      !logo ||
       !mask ||
       !image ||
       !content
@@ -127,11 +153,13 @@ export default function CraftReveal() {
         : Math.min(window.innerWidth * 0.54, 860);
 
       const initWidth = isMobile
-        ? Math.min(window.innerWidth * 0.45, 180)
-        : Math.min(window.innerWidth * 0.15, 190);
+        ? Math.min(window.innerWidth * 0.62, 250)
+        : Math.min(window.innerWidth * 0.26, 360);
 
       gsap.set(content, { opacity: 0, y: 22 });
       if (overlayTitleRef.current) gsap.set(overlayTitleRef.current, { opacity: 0, y: 14 });
+      gsap.set(logo, { opacity: 0.9, scale: 1, y: 0 });
+      gsap.set(mask, { opacity: 0 });
       gsap.set(image, {
         scale: isMobile ? 1.14 : 1.1,
         transformOrigin: "center center",
@@ -143,9 +171,9 @@ export default function CraftReveal() {
       gsap.set(frame, {
         width: initWidth,
         borderRadius: isMobile ? 28 : 36,
-        borderColor: "rgba(255,255,255,0)",
-        backgroundColor: "rgba(255,255,255,0)",
-        boxShadow: "0 24px 80px rgba(0,0,0,0)",
+        borderColor: "rgba(0,0,0,0.09)",
+        backgroundColor: "rgba(255,255,255,0.46)",
+        boxShadow: "0 18px 48px rgba(0,0,0,0.06)",
       });
 
       const tl = gsap.timeline({
@@ -187,7 +215,7 @@ export default function CraftReveal() {
         .to(
           watermark,
           {
-            opacity: 0.05,
+            opacity: 0.08,
             ease: "power1.inOut",
             duration: 0.38,
           },
@@ -210,13 +238,24 @@ export default function CraftReveal() {
       }
 
       tl.to(
+          logo,
+          {
+            opacity: 0,
+            scale: 1.08,
+            y: -10,
+            ease: "power2.inOut",
+            duration: 0.22,
+          },
+          0.34,
+        )
+        .to(
           frame,
           {
             width: targetWidth,
             borderRadius: isMobile ? 18 : 22,
-            borderColor: "rgba(255,255,255,0.1)",
-            backgroundColor: "rgba(255,255,255,0.03)",
-            boxShadow: "0 24px 80px rgba(0,0,0,0.48)",
+            borderColor: "rgba(0,0,0,0.12)",
+            backgroundColor: "rgba(255,255,255,0.58)",
+            boxShadow: "0 24px 80px rgba(0,0,0,0.12)",
             ease: "power2.inOut",
             duration: 0.46,
           },
@@ -225,6 +264,7 @@ export default function CraftReveal() {
         .to(
           mask,
           {
+            opacity: 1,
             "--mask-size": isMobile ? "2400%" : "2100%",
             ease: "power1.inOut",
             duration: 0.46,
@@ -279,7 +319,7 @@ export default function CraftReveal() {
     <section
       id="craft"
       ref={sectionRef}
-      className="relative isolate overflow-hidden bg-black text-white"
+      className="relative isolate overflow-hidden bg-white text-black"
     >
       {/* Background layers */}
       <Image
@@ -289,8 +329,20 @@ export default function CraftReveal() {
         aria-hidden="true"
         className="object-cover opacity-[0.1]"
       />
-      <div className="pointer-events-none absolute inset-0 bg-[url('/assets/noise.png')] bg-[length:200px_200px] opacity-[0.05] mix-blend-soft-light" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.04),transparent_28%,rgba(0,0,0,0.42))]" />
+      <div className="pointer-events-none absolute inset-0 bg-[url('/assets/noise.png')] bg-[length:200px_200px] opacity-[0.03] mix-blend-multiply" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.70),transparent_55%),linear-gradient(180deg,rgba(255,255,255,0.30),transparent_35%,rgba(0,0,0,0.03))]" />
+
+      {/* Animated vertical border lines */}
+      <div ref={borderRef} className="absolute inset-1.5 sm:inset-2 md:inset-3 pointer-events-none z-10">
+        {inView && (
+          <>
+            <VBorder pos="left"  offset={0} overhang={14} opacity={0.82} delay={0.1} />
+            <VBorder pos="right" offset={0} overhang={14} opacity={0.82} delay={0.25} />
+            <VBorder pos="left"  offset={7} overhang={7} opacity={0.45} delay={0.35} />
+            <VBorder pos="right" offset={7} overhang={7} opacity={0.45} delay={0.45} />
+          </>
+        )}
+      </div>
 
       <div className="relative mx-auto flex h-[100svh] w-full max-w-[1540px] flex-col px-5 pt-10 pb-8 sm:px-8 sm:pt-12 sm:pb-10 lg:px-12 lg:pt-14 lg:pb-12">
 
@@ -299,22 +351,22 @@ export default function CraftReveal() {
             ref={headingRef}
             className="relative z-20 mb-5 text-center sm:mb-6"
           >
-            <div className="inline-flex items-center gap-3 font-[family-name:var(--font-museo-moderno)] text-[13px] font-bold uppercase tracking-[0.20em] text-white/60 sm:text-[15px]">
-              <span className="text-white/28">—</span>
+            <div className="inline-flex items-center gap-3 font-[family-name:var(--font-museo-moderno)] text-[13px] font-bold uppercase tracking-[0.20em] text-black/60 sm:text-[15px]">
+              <span className="text-black/28">—</span>
               <span>The Craft</span>
-              <span className="text-white/28">—</span>
+              <span className="text-black/28">—</span>
             </div>
           </div>
 
           <h2
             ref={watermarkRef}
-            className="pointer-events-none select-none text-center font-[family-name:var(--font-museo-moderno)] text-[clamp(3.8rem,15vw,11.5rem)] font-bold leading-none tracking-[-0.02em] text-white/[1]"
+            className="pointer-events-none select-none text-center font-[family-name:var(--font-museo-moderno)] text-[clamp(3.8rem,15vw,11.5rem)] font-bold leading-none tracking-[-0.02em] text-black/[0.60]"
           > CRAFT
           </h2>
         </div>
 
         {/* ── MIDDLE: bullets + image — centered in remaining space ── */}
-        <div className="relative z-10 min-h-0 flex-1 flex items-center">
+        <div className="relative z-10 min-h-0 flex-1 flex items-start pt-2 sm:pt-4 lg:pt-6">
             <div className="grid w-full items-center gap-6 lg:grid-cols-[1fr_minmax(260px,900px)_1fr] lg:gap-10">
             {/* Left bullets */}
             <div className="hidden lg:block">
@@ -323,17 +375,28 @@ export default function CraftReveal() {
 
             <div className="flex justify-center">
               <div className="relative w-full">
-                <div className="absolute inset-x-[14%] top-[12%] h-[60%] rounded-full bg-white/[0.13] blur-3xl" />
-                <div className="absolute inset-x-[18%] bottom-[6%] h-16 rounded-full bg-white/[0.08] blur-3xl sm:h-24" />
+                <div className="absolute inset-x-[14%] top-[12%] h-[60%] rounded-full bg-black/[0.05] blur-3xl" />
+                <div className="absolute inset-x-[18%] bottom-[6%] h-16 rounded-full bg-black/[0.03] blur-3xl sm:h-24" />
 
                 <div
                   ref={frameRef}
-                  className="relative mx-auto overflow-hidden border border-white/10 bg-white/[0.03] shadow-[0_24px_80px_rgba(0,0,0,0.48)] h-[clamp(180px,30vh,420px)] lg:h-[clamp(260px,46vh,560px)]"
+                  className="relative mx-auto overflow-hidden border border-black/[0.08] bg-black/[0.02] shadow-[0_24px_80px_rgba(0,0,0,0.10)] h-[clamp(180px,30vh,420px)] lg:h-[clamp(260px,46vh,560px)]"
                 >
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.82),rgba(255,255,255,0.08)_60%,transparent_82%)]" />
+                  <div
+                    ref={logoRef}
+                    className="pointer-events-none absolute inset-[18%] z-[1] bg-center bg-no-repeat"
+                    style={{
+                      backgroundImage: "url('/logo/d.png')",
+                      backgroundSize: "contain",
+                      opacity: 0.9,
+                      filter: "drop-shadow(0 18px 32px rgba(0,0,0,0.08)) grayscale(1) contrast(1.18)",
+                    }}
+                  />
                   <div
                     ref={maskRef}
                     style={maskStyle}
-                    className="relative h-full w-full overflow-hidden"
+                    className="relative z-[2] h-full w-full overflow-hidden"
                   >
                     <div
                       ref={imageRef}
@@ -371,12 +434,12 @@ export default function CraftReveal() {
 
         <div
           ref={contentRef}
-          className="relative z-20 shrink-0 pt-3 text-center sm:pt-5 lg:pt-8"
+          className="relative z-20 shrink-0 -top-30 pt-3 text-center sm:pt-5 lg:pt-8"
         >
-          <h3 className="font-[family-name:var(--font-museo-moderno)] text-[clamp(1.5rem,3.8vw,3.2rem)] font-bold leading-[1.04] tracking-[-0.04em] text-white">
+          <h3 className="font-[family-name:var(--font-museo-moderno)] text-[clamp(1.5rem,3.8vw,3.2rem)] font-bold leading-[1.04] tracking-[-0.04em] text-black/88">
             Made with Craft, Poured with Passion
           </h3>
-          <p className="mx-auto mt-3 max-w-[46ch] px-2 text-[13px] leading-[1.65] text-white/50 sm:px-0 sm:text-[15px]">
+          <p className="mx-auto mt-3 max-w-[46ch] px-2 text-[13px] leading-[1.65] text-black/50 sm:px-0 sm:text-[15px]">
             Brand, product thinking, interface polish, and engineering
             discipline - come together in one focused reveal.
           </p>
