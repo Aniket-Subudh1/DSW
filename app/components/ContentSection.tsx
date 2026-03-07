@@ -228,8 +228,8 @@ const HeadlineCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement |
   ];
 
   return (
-    <BentoCard innerRef={innerRef} className="p-3 sm:p-4 !bg-black !border-black relative overflow-hidden">
-      <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 600 200">
+    <BentoCard innerRef={innerRef} className="p-3 sm:p-4 !bg-black  !border-black relative overflow-hidden">
+      <svg className="absolute inset-0  w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 600 200">
         {[58, 126].map((y, i) => (
           <g key={`h-${i}`}>
             <line x1="0" y1={y} x2="600" y2={y} stroke="rgba(255,255,255,0.07)" strokeWidth="0.5" />
@@ -254,14 +254,14 @@ const HeadlineCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement |
           </g>
         ))}
       </svg>
-      <div className="absolute inset-[4px] rounded-xl border border-dashed border-white/[0.06] pointer-events-none" />
-      <div className="relative z-10">
-        <p className="text-xs sm:text-sm md:text-base font-bold text-white leading-[1.3] font-[family-name:var(--font-museo-moderno)]">
+      <div className="absolute inset-[4px]  rounded-xl border border-dashed border-white/[0.06] pointer-events-none" />
+      <div className="relative z-10 grid gap-4 sm:gap-5 lg:grid-cols-[minmax(0,1.7fr)_minmax(22rem,0.9fr)] lg:items-center lg:gap-8">
+        <p className="max-w-[42rem] text-xs sm:text-sm md:text-base font-bold text-white leading-[1.3] font-[family-name:var(--font-museo-moderno)] lg:leading-[1.25]">
   We design, build and deliver{" "}
   <span className="text-white/50">reliable, production-ready software</span>{" "}
   - turning ideas into scalable digital products.
 </p>
-        <div className="mt-3 sm:mt-4 grid grid-cols-3 divide-x divide-dashed divide-white/[0.10] w-fit">
+        <div className="grid w-full grid-cols-3 divide-x divide-dashed divide-white/[0.10] lg:max-w-[24rem] lg:justify-self-end">
           {stats.map((s, i) => (
             <div key={s.label} className={`flex min-w-0 flex-col gap-1.5 ${i > 0 ? "pl-3 sm:pl-4" : ""} ${i < 2 ? "pr-3 sm:pr-4" : ""}`}>
               <span className="text-lg sm:text-xl md:text-2xl font-bold text-white font-[family-name:var(--font-museo-moderno)] leading-none tabular-nums"
@@ -353,7 +353,7 @@ const HowWeWorkCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement 
 
 const DeliveryCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement | null> }) => {
   return (
-    <BentoCard innerRef={innerRef} className="sm:col-span-2 lg:col-span-2 p-2.5 sm:p-3 flex flex-col justify-between items-center">
+    <BentoCard innerRef={innerRef} className="sm:col-span-2 lg:col-span-2 p-2.5 sm:p-3 flex flex-col">
       <div className="flex items-center gap-2 font-[family-name:var(--font-museo-moderno)] font-bold uppercase tracking-[0.14em] text-[15px] sm:text-[17px] leading-none mb-1">
         <span className="text-black/22 text-[0.88em]">{"{"}</span>
         <span className="text-black/78">Delivery Timeline</span>
@@ -868,8 +868,8 @@ const ContentSection = () => {
       <div className="relative z-20 w-full flex flex-col px-1.5 sm:px-0">
         <ServicesHeading />
 
-        <div className="w-full flex mb-2">
-          <div className="w-full sm:w-[86%] lg:w-[52%] xl:w-[50%]">
+        <div className="w-full flex justify-center mb-2">
+          <div className="w-full">
             <HeadlineCard innerRef={bentoPanelRef.headline} />
           </div>
         </div>
