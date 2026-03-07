@@ -126,28 +126,6 @@ export default function Footer() {
         aria-hidden="true"
       />
 
-      <div
-        className="absolute inset-x-1.5 sm:inset-x-2 md:inset-x-3 inset-y-0 pointer-events-none z-10"
-        aria-hidden="true"
-      >
-        <span
-          className="absolute left-0 inset-y-0 block"
-          style={{ width: "2px", background: "rgba(255,255,255,0.18)" }}
-        />
-        <span
-          className="absolute right-0 inset-y-0 block"
-          style={{ width: "2px", background: "rgba(255,255,255,0.18)" }}
-        />
-        <span
-          className="absolute inset-y-0 block"
-          style={{ left: "7px", width: "2px", background: "rgba(255,255,255,0.09)" }}
-        />
-        <span
-          className="absolute inset-y-0 block"
-          style={{ right: "7px", width: "2px", background: "rgba(255,255,255,0.09)" }}
-        />
-      </div>
-
       <div className="relative z-20 w-full">
         <span
           ref={rule1Ref}
