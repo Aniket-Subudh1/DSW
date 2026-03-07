@@ -228,7 +228,7 @@ const HeadlineCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement |
   ];
 
   return (
-    <BentoCard innerRef={innerRef} className="p-3 sm:p-4 !bg-black  !border-black relative overflow-hidden">
+    <BentoCard innerRef={innerRef} className="p-3 sm:p-4 !bg-black  !border-black relative overflow-hidden flex justify-center items-center">
       <svg className="absolute inset-0  w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 600 200">
         {[58, 126].map((y, i) => (
           <g key={`h-${i}`}>
@@ -309,12 +309,12 @@ const HowWeWorkCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement 
 
   return (
     <BentoCard innerRef={innerRef} className="sm:col-span-2 lg:col-span-2  p-2.5 sm:p-3 flex flex-col">
-      <div className="flex items-center gap-2 font-[family-name:var(--font-museo-moderno)] font-bold uppercase tracking-[0.14em] text-[15px] sm:text-[17px] leading-none mb-1">
+      <div className="flex items-center gap-2 font-[family-name:var(--font-museo-moderno)] font-bold uppercase tracking-[0.14em] text-[15px] sm:text-[17px] leading-none mb-1 flex justify-center items-center">
         <span className="text-black/22 text-[0.88em]">{"{"}</span>
         <span className="text-black/78">How We Work</span>
         <span className="text-black/22 text-[0.88em]">{"}"}</span>
       </div>
-      <p className="text-[10px] sm:text-xs text-black/50 mt-0.5 mb-2">Our three-phase delivery framework</p>
+      <p className="text-[10px] sm:text-xs text-black/50 mt-0.5 mb-2 text-center">Our three-phase delivery framework</p>
       <div className="flex-1 flex items-center w-full">
         <svg viewBox="0 0 300 80" fill="none" className="w-full overflow-visible">
           <line x1="30" y1="22" x2="270" y2="22" stroke="rgba(0,0,0,0.20)" strokeWidth="1.5" strokeDasharray="5 4" />
@@ -354,12 +354,12 @@ const HowWeWorkCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement 
 const DeliveryCard = ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement | null> }) => {
   return (
     <BentoCard innerRef={innerRef} className="sm:col-span-2 lg:col-span-2 p-2.5 sm:p-3 flex flex-col">
-      <div className="flex items-center gap-2 font-[family-name:var(--font-museo-moderno)] font-bold uppercase tracking-[0.14em] text-[15px] sm:text-[17px] leading-none mb-1">
+      <div className="flex items-center gap-2 font-[family-name:var(--font-museo-moderno)] font-bold uppercase tracking-[0.14em] text-[15px] sm:text-[17px] leading-none mb-1 flex justify-center items-center">
         <span className="text-black/22 text-[0.88em]">{"{"}</span>
         <span className="text-black/78">Delivery Timeline</span>
         <span className="text-black/22 text-[0.88em]">{"}"}</span>
       </div>
-      <p className="text-[10px] sm:text-xs text-black/50 font-medium mt-0.5 mb-2">Typical MVP: 4 - 6 weeks</p>
+      <p className="text-[10px] sm:text-xs text-black/50 font-medium mt-0.5 mb-2 text-center">Typical MVP: 4 - 6 weeks</p>
       <div className="w-full">
         <Image
           src={deliveryImage}
