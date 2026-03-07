@@ -325,8 +325,31 @@ export function Hero() {
                 transition={{ duration: 0.7, ease: [0.33, 1, 0.68, 1], delay: 0.9 }}
                 whileHover="hover"
                 whileTap="hover"
-                className="relative group inline-flex items-center gap-4 px-8 py-4 rounded-sm border border-dashed border-white/25 bg-white/[0.03] overflow-hidden cursor-pointer select-none active:scale-95 transition-transform duration-150"
+                className="relative group inline-flex items-center gap-4 px-8 py-4 rounded-sm border border-dashed border-white/40 bg-white/[0.06] cursor-pointer select-none active:scale-95 transition-transform duration-150"
               >
+                {/* Traveling border lights */}
+                {/* Top edge — travels left to right */}
+                <span className="absolute top-0 left-0 h-[1px] w-[30%] pointer-events-none" style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent)', filter: 'blur(0.5px)', animation: 'border-light-x 4s ease-in-out infinite' }} />
+                {/* Right edge — travels top to bottom */}
+                <span className="absolute top-0 right-0 w-[1px] h-[30%] pointer-events-none" style={{ background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.7), transparent)', filter: 'blur(0.5px)', animation: 'border-light-y 4s ease-in-out infinite' }} />
+                {/* Bottom edge — travels right to left */}
+                <span className="absolute bottom-0 right-0 h-[1px] w-[30%] pointer-events-none" style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent)', filter: 'blur(0.5px)', animation: 'border-light-x-rev 4s ease-in-out infinite 2s' }} />
+                {/* Left edge — travels bottom to top */}
+                <span className="absolute bottom-0 left-0 w-[1px] h-[30%] pointer-events-none" style={{ background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.5), transparent)', filter: 'blur(0.5px)', animation: 'border-light-y-rev 4s ease-in-out infinite 2s' }} />
+
+                {/* Soft glow pulse behind the button */}
+                <span className="absolute -inset-1 rounded-sm bg-white/[0.04] blur-md animate-[pulse_3s_ease-in-out_infinite] pointer-events-none" />
+
+                {/* Shimmer sweep */}
+                <span
+                  className="absolute inset-0 pointer-events-none overflow-hidden rounded-sm"
+                >
+                  <span
+                    className="absolute inset-0 -translate-x-full animate-[shimmer_3.5s_ease-in-out_infinite_1.5s]"
+                    style={{ background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%)" }}
+                  />
+                </span>
+
                 <motion.span
                   variants={{ hover: { scaleX: 1 } }}
                   initial={{ scaleX: 0 }}
@@ -339,20 +362,21 @@ export function Hero() {
                   <motion.span
                     key={i}
                     variants={{ hover: { opacity: 1, scale: 1.4 } }}
-                    initial={{ opacity: 0.35, scale: 1 }}
+                    initial={{ opacity: 0.55, scale: 1 }}
                     transition={{ duration: 0.25 }}
-                    className={`absolute w-1 h-1 rounded-full bg-white/60 ${pos}`}
+                    className={`absolute w-1 h-1 rounded-full bg-white/70 ${pos}`}
                   />
                 ))}
 
-                <span className="relative text-sm font-semibold tracking-widest uppercase text-white/70 group-hover:text-white/95 transition-colors duration-300">
+                <span className="relative text-sm font-semibold tracking-widest uppercase text-white/85 group-hover:text-white transition-colors duration-300">
                   Book a Strategy Call
                 </span>
 
                 <motion.span
                   variants={{ hover: { x: 5, opacity: 1 } }}
-                  initial={{ x: 0, opacity: 0.5 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  initial={{ x: 0, opacity: 0.7 }}
+                  animate={{ x: [0, 4, 0] }}
+                  transition={{ duration: 1.8, ease: "easeInOut", repeat: Infinity, repeatDelay: 2 }}
                   className="relative text-white text-base leading-none"
                 >
                   →

@@ -1,5 +1,40 @@
 @import "tailwindcss";
 
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes border-light-x {
+  0%, 100% { left: -15%; opacity: 0; }
+  5%       { opacity: 1; }
+  45%      { opacity: 1; }
+  50%      { left: 100%; opacity: 0; }
+  100%     { left: 100%; opacity: 0; }
+}
+
+@keyframes border-light-y {
+  0%, 50%  { top: -15%; opacity: 0; }
+  55%      { opacity: 1; }
+  95%      { opacity: 1; }
+  100%     { top: 100%; opacity: 0; }
+}
+
+@keyframes border-light-x-rev {
+  0%, 100% { right: -15%; opacity: 0; }
+  5%       { opacity: 1; }
+  45%      { opacity: 1; }
+  50%      { right: 100%; opacity: 0; }
+  100%     { right: 100%; opacity: 0; }
+}
+
+@keyframes border-light-y-rev {
+  0%, 50%  { bottom: -15%; opacity: 0; }
+  55%      { opacity: 1; }
+  95%      { opacity: 1; }
+  100%     { bottom: 100%; opacity: 0; }
+}
+
 /* Force black background everywhere */
 html,
 body {
