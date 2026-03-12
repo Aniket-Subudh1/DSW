@@ -927,7 +927,7 @@ export default function CraftReveal() {
               Our Craft
             </h2>
             <p className="text-sm sm:text-base text-white/45 mt-3 max-w-[480px] leading-[1.7]">
-              Every project is treated as a product — architected for scale,
+              Every project is treated as a product - architected for scale,
               designed for users, shipped with precision.
             </p>
           </div>
