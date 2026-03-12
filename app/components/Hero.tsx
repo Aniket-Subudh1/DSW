@@ -323,58 +323,61 @@ export function Hero() {
               animate="animate"
             >
               <NoiseBackground
-                containerClassName="w-full p-[2px] rounded-lg bg-black"
-                gradientColors={[
-                  "rgb(180, 120, 255)",
-                  "rgb(100, 180, 255)",
-                  "rgb(255, 180, 100)",
-                ]}
-                speed={0.05}
-              >
-                <motion.div
-                  variants={fadeInUp}
-                  className="grid gap-0 rounded-[5px] bg-black/90 px-5 py-5 sm:grid-cols-3 sm:px-6"
-                >
-                  <motion.div
-                    whileHover={{ x: 3 }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="group cursor-default py-3 sm:py-0 sm:pr-6"
-                  >
-                    <p className="mb-1.5 text-[9px] tracking-[0.18em] text-white/35 uppercase sm:text-[8px]">
-                      RAPID DELIVERY
-                    </p>
-                    <p className="text-[13px] font-medium leading-[1.5] text-white/85 transition-colors duration-300 group-hover:text-white sm:text-[11px]">
-                      Full SaaS products shipped at unmatched speed.
-                    </p>
-                  </motion.div>
+  containerClassName="w-full p-[2px] rounded-lg bg-black"
+  gradientColors={[
+    "rgb(180, 120, 255)",
+    "rgb(100, 180, 255)",
+    "rgb(255, 180, 100)",
+  ]}
+  speed={0.05}
+>
+  <motion.div
+    variants={fadeInUp}
+    className="grid gap-0 rounded-[5px] bg-black/90 px-5 py-5 sm:grid-cols-3 sm:px-6"
+  >
+    <motion.div
+      whileHover={{ x: 3 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="group cursor-default py-3 sm:py-0 sm:pr-6"
+    >
+      <p className="mb-1.5 text-[9px] tracking-[0.18em] text-white/35 uppercase sm:text-[8px]">
+        RAPID DELIVERY
+      </p>
+      <p className="text-[13px] font-medium leading-[1.5] text-white/85 transition-colors duration-300 group-hover:text-white sm:text-[11px]">
+        From idea to production in weeks - we build and launch full SaaS
+        platforms faster than traditional development teams.
+      </p>
+    </motion.div>
 
-                  <motion.div
-                    whileHover={{ x: 3 }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="group cursor-default border-t border-white/[0.08] py-3 sm:border-l sm:border-t-0 sm:px-6 sm:py-0"
-                  >
-                    <p className="mb-1.5 text-[9px] tracking-[0.18em] text-white/35 uppercase sm:text-[8px]">
-                      INDUSTRY GRADE
-                    </p>
-                    <p className="text-[13px] font-medium leading-[1.5] text-white/85 transition-colors duration-300 group-hover:text-white sm:text-[11px]">
-                      Enterprise-quality engineering that scales.
-                    </p>
-                  </motion.div>
+    <motion.div
+      whileHover={{ x: 3 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="group cursor-default border-t border-white/[0.08] py-3 sm:border-l sm:border-t-0 sm:px-6 sm:py-0"
+    >
+      <p className="mb-1.5 text-[9px] tracking-[0.18em] text-white/35 uppercase sm:text-[8px]">
+        ENTERPRISE QUALITY
+      </p>
+      <p className="text-[13px] font-medium leading-[1.5] text-white/85 transition-colors duration-300 group-hover:text-white sm:text-[11px]">
+        Clean architecture, scalable infrastructure, and production-grade
+        engineering built for real-world growth.
+      </p>
+    </motion.div>
 
-                  <motion.div
-                    whileHover={{ x: 3 }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="group cursor-default border-t border-white/[0.08] py-3 sm:border-l sm:border-t-0 sm:pl-6 sm:py-0"
-                  >
-                    <p className="mb-1.5 text-[9px] tracking-[0.18em] text-white/35 uppercase sm:text-[8px]">
-                      BEST PRICES
-                    </p>
-                    <p className="text-[13px] font-medium leading-[1.5] text-white/85 transition-colors duration-300 group-hover:text-white sm:text-[11px]">
-                      Premium software at prices that make sense.
-                    </p>
-                  </motion.div>
-                </motion.div>
-              </NoiseBackground>
+    <motion.div
+      whileHover={{ x: 3 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="group cursor-default border-t border-white/[0.08] py-3 sm:border-l sm:border-t-0 sm:pl-6 sm:py-0"
+    >
+      <p className="mb-1.5 text-[9px] tracking-[0.18em] text-white/35 uppercase sm:text-[8px]">
+        SMART PRICING
+      </p>
+      <p className="text-[13px] font-medium leading-[1.5] text-white/85 transition-colors duration-300 group-hover:text-white sm:text-[11px]">
+        High-quality software development without inflated agency costs -
+        transparent pricing that founders actually appreciate.
+      </p>
+    </motion.div>
+  </motion.div>
+</NoiseBackground>
             </motion.div>
 
           </div>

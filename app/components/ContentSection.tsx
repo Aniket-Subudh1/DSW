@@ -1207,12 +1207,44 @@ const ServiceTile = memo(
       return () => cancelAnimationFrame(rafRef.current);
     }, []);
 
+    const titleMetrics = useMemo(() => {
+      const normalizedTitle = service.title.replace(/[{}]/g, "").trim();
+      const titleLength = normalizedTitle.length;
+      const longestSegment = normalizedTitle
+        .split(/[\s/&-]+/)
+        .reduce((maxLength, segment) => Math.max(maxLength, segment.length), 0);
+
+      if (titleLength >= 24 || longestSegment >= 12) {
+        return {
+          fontSize: "clamp(0.62rem, 0.95vw, 0.72rem)",
+          letterSpacing: "-0.01em",
+          lineHeight: 1.22,
+        };
+      }
+
+      if (titleLength >= 18 || longestSegment >= 9) {
+        return {
+          fontSize: "clamp(0.66rem, 1vw, 0.77rem)",
+          letterSpacing: "-0.014em",
+          lineHeight: 1.18,
+        };
+      }
+
+      return {
+        fontSize: "clamp(0.7rem, 1.1vw, 0.82rem)",
+        letterSpacing: "-0.02em",
+        lineHeight: 1.14,
+      };
+    }, [service.title]);
+
     const titleStyle = useMemo(
       () => ({
-        fontSize: "clamp(0.7rem, 1.1vw, 0.82rem)",
         color: "rgba(0,0,0,0.88)",
+        ...titleMetrics,
+        overflowWrap: "anywhere" as const,
+        hyphens: "auto" as const,
       }),
-      []
+      [titleMetrics]
     );
     const descStyle = useMemo(
       () => ({
@@ -1294,7 +1326,7 @@ const ServiceTile = memo(
         <div className="relative z-10 mt-auto pt-2">
           <motion.h3
             layoutId={titleLayoutId}
-            className="font-bold font-[family-name:var(--font-museo-moderno)] leading-tight"
+            className="max-w-full font-bold font-[family-name:var(--font-museo-moderno)] text-pretty leading-tight break-words"
             style={titleStyle}
           >
             {service.title}
