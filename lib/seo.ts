@@ -65,6 +65,7 @@ type PageSeoInput = {
 
 export function createPageMetadata({ title, description, path, keywords }: PageSeoInput): Metadata {
   const url = absoluteUrl(path);
+  const ogImageUrl = absoluteUrl("/ban.png");
   const resolvedKeywords = keywords ?? SITE_CONFIG.keywords;
 
   return {
@@ -83,7 +84,9 @@ export function createPageMetadata({ title, description, path, keywords }: PageS
       type: "website",
       images: [
         {
-          url: "/ban.png",
+          url: ogImageUrl,
+          secureUrl: ogImageUrl,
+          type: "image/png",
           width: 1200,
           height: 630,
           alt: `${SITE_CONFIG.name} Open Graph Image`,
@@ -95,7 +98,7 @@ export function createPageMetadata({ title, description, path, keywords }: PageS
       title,
       description,
       creator: SITE_CONFIG.twitterHandle,
-      images: ["/ban.png"],
+      images: [ogImageUrl],
     },
   };
 }

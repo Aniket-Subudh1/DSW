@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, MuseoModerno } from "next/font/google";
 import "./globals.css";
-import { getBaseUrl, SITE_CONFIG } from "@/lib/seo";
+import { absoluteUrl, getBaseUrl, SITE_CONFIG } from "@/lib/seo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,7 +46,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/ban.png",
+        url: absoluteUrl("/ban.png"),
+        secureUrl: absoluteUrl("/ban.png"),
+        type: "image/png",
         width: 1200,
         height: 630,
         alt: `${SITE_CONFIG.name} Open Graph Image`,
@@ -58,7 +60,7 @@ export const metadata: Metadata = {
     title: SITE_CONFIG.title,
     description: SITE_CONFIG.description,
     creator: SITE_CONFIG.twitterHandle,
-    images: ["/ban.png"],
+    images: [absoluteUrl("/ban.png")],
   },
   robots: {
     index: true,
@@ -90,7 +92,7 @@ const organizationSchema = {
   "@type": "Organization",
   name: SITE_CONFIG.legalName,
   url: baseUrl,
-  logo: "/logo/logo-v2.png",
+  logo: absoluteUrl("/logo/logo-v2.png"),
   email: "hello@devsomeware.com",
   sameAs: [
     "https://www.linkedin.com/company/devsomeware",
