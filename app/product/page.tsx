@@ -12,22 +12,8 @@ import Footer from "@/app/components/Footer";
 gsap.registerPlugin(ScrollTrigger, ScrambleTextPlugin);
 
 const PRODUCTS = [
-  {
+    {
     id: "P01",
-    name: "JogaadIndia",
-    tagline: "India's innovation & jugaad marketplace",
-    category: "Platform",
-    year: "2024",
-    status: "Live",
-    accent: "#f59e0b",
-    image: "/projects/JogaadIndia.png",
-    tags: ["Next.js", "Node.js", "MongoDB", "Razorpay", "Tailwind CSS"],
-    description:
-      "A marketplace connecting innovators and problem-solvers across India. Features vendor listings, demand posting, secure payments, and real-time negotiation threads — all built for Bharat's grassroots ingenuity.",
-    metrics: ["10k+ monthly active users", "₹50L+ transactions", "500+ verified vendors"],
-  },
-  {
-    id: "P02",
     name: "PGMaster",
     tagline: "Smart PG & hostel management platform",
     category: "SaaS",
@@ -41,7 +27,7 @@ const PRODUCTS = [
     metrics: ["200+ PGs managed", "40% faster rent collection", "4.8★ app rating"],
   },
   {
-    id: "P03",
+    id: "P02",
     name: "Saveful",
     tagline: "Personal finance & smart savings tracker",
     category: "Web App",
@@ -55,7 +41,7 @@ const PRODUCTS = [
     metrics: ["₹1.2Cr+ savings tracked", "12k+ active users", "30% avg savings increase"],
   },
   {
-    id: "P04",
+    id: "P03",
     name: "Artistic",
     tagline: "Creative portfolio & art commission platform",
     category: "Platform",
@@ -69,61 +55,49 @@ const PRODUCTS = [
     metrics: ["2k+ artists onboarded", "$180k+ commissions fulfilled", "98% client satisfaction"],
   },
   {
-    id: "P05",
-    name: "CloudVault",
-    tagline: "Enterprise cloud infrastructure management",
+    id: "P04",
+    name: "JogaadIndia",
+    tagline: "India's innovation & jugaad marketplace",
     category: "Platform",
-    year: "2025",
-    status: "Live",
-    accent: "#3b82f6",
-    image: "/banner/cloud.png",
-    tags: ["Next.js", "TypeScript", "AWS", "Terraform", "Node.js"],
-    description:
-      "A full-stack cloud management platform engineered for enterprise engineering teams to provision, monitor, and scale infrastructure without ever leaving the browser.",
-    metrics: ["2M+ events/hour", "40% cost reduction", "99.98% uptime SLA"],
-  },
-  {
-    id: "P06",
-    name: "APIForge",
-    tagline: "Unified REST & GraphQL developer gateway",
-    category: "Tool",
-    year: "2025",
-    status: "Live",
-    accent: "#6366f1",
-    image: "/banner/api.png",
-    tags: ["GraphQL", "REST", "TypeScript", "Redis", "PostgreSQL"],
-    description:
-      "A developer-first API gateway with automatic schema generation, rate-limiting, built-in analytics, and a visual playground — cutting integration time from weeks to hours.",
-    metrics: ["< 2ms p99 latency", "12k req/sec peak", "Auto-generated docs"],
-  },
-  {
-    id: "P07",
-    name: "GrowthOS",
-    tagline: "Conversion funnels, A/B tests & campaign automation",
-    category: "SaaS",
     year: "2024",
     status: "Live",
-    accent: "#f97316",
-    image: "/banner/fbanner.png",
-    tags: ["Next.js", "Framer Motion", "Stripe", "Resend", "Supabase"],
+    accent: "#f59e0b",
+    image: "/projects/JogaadIndia.png",
+    tags: ["Next.js", "Node.js", "MongoDB", "Razorpay", "Tailwind CSS"],
     description:
-      "An end-to-end growth platform combining a landing-page builder, email sequencing, and A/B testing into one seamless workflow — delivering a 38% average conversion lift.",
-    metrics: ["38% avg conversion lift", "Visual A/B editor", "0-code deploy"],
+      "A marketplace connecting innovators and problem-solvers across India. Features vendor listings, demand posting, secure payments, and real-time negotiation threads — all built for Bharat's grassroots ingenuity.",
+    metrics: ["10k+ monthly active users", "₹50L+ transactions", "500+ verified vendors"],
   },
   {
-    id: "P08",
-    name: "DataLens",
-    tagline: "Real-time BI dashboard with zero setup",
+    id: "05",
+    name: "GT Tech",
+    tagline: "Industry 4.0 solutions for digital transformation",
     category: "Web App",
     year: "2024",
     status: "Live",
-    accent: "#eab308",
-    image: "/banner/pptye.png",
-    tags: ["React", "D3.js", "Python", "BigQuery", "Tailwind CSS"],
     description:
-      "A drag-and-drop analytics dashboard built for non-technical stakeholders. Connect any data source in minutes and transform raw events into interactive charts, funnels, and cohort analyses.",
-    metrics: ["50+ chart types", "10s query avg", "CSV / API export"],
+      "GT Tech provides Industry 4.0 solutions including AR/VR, robotics, automation, and AI-driven engineering services to help organizations digitize operations and accelerate innovation.",
+    image: "/projects/gttech.png",
+    link: "https://thegttech.com",
+    tags: ["Next.js", "AWS", "MongoDB"],
+    accent: "#0ea5e9",
+    metrics: ["50+ enterprise clients", "30% avg efficiency boost", "24/7 global support"],
   },
+  {
+    id: "06",
+    name: "QwikTest",
+    tagline: "Online examination and assessment platform",
+    category: "SaaS",
+    year: "2024",
+    status: "Live",
+    description:
+      "QwikTest is an online exam and assessment platform that enables educational institutions and organizations to create quizzes, practice tests, and live online exams with detailed analytics.",
+    image: "/projects/qwiktest.png",
+    link: "https://www.qwiktest.in",
+    tags: ["react", "redis", "Node + Express", "MongoDB", "OpenAI"],
+    accent: "#ef4444",
+    metrics: ["100+ exams conducted", "500+ students assessed", "99.9% uptime"],
+  }
 ] as const;
 
 type Product = (typeof PRODUCTS)[number];
