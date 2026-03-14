@@ -3,180 +3,271 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
+const BRAND = 'DEVSOMEWARE';
+const CHARS = '█▓▒░_/\\|<>{}[]';
+
 export default function Preloader() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [count, setCount] = useState(0);
+  const [brand, setBrand] = useState(() => BRAND.split('').map(() => '▓').join(''));
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2500);
-
-    return () => clearTimeout(timer);
+    const duration = 2300;
+    const start = Date.now();
+    let raf: number;
+    const tick = () => {
+      const p = Math.min((Date.now() - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setCount(Math.floor(eased * 100));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
   }, []);
 
-  if (!isLoading) return null;
+  useEffect(() => {
+    const duration = 1700;
+    const start = Date.now();
+    let raf: number;
+    const animate = () => {
+      const p = Math.min((Date.now() - start) / duration, 1);
+      const revealed = Math.floor(p * BRAND.length);
+      const result = BRAND.split('')
+        .map((char, i) => {
+          if (i < revealed) return char;
+          return CHARS[Math.floor(Math.random() * CHARS.length)];
+        })
+        .join('');
+      setBrand(result);
+      if (p < 1) raf = requestAnimationFrame(animate);
+    };
+    raf = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   return (
-    <div className="preloader-container">
-      
-      {/* Background Image */}
-      <div className="preloader-bg"></div>
-
-      {/* FULLSCREEN GLASS */}
-      <div className="preloader-glass"></div>
-
+    <div className="pl-wrap">
       {/* Noise */}
-      <div className="preloader-noise"></div>
+      <div className="pl-noise" />
+      {/* Subtle radial glow */}
+      <div className="pl-glow" />
+      {/* Corner rule lines */}
+      <div className="pl-corner pl-corner-tl" />
+      <div className="pl-corner pl-corner-tr" />
+      <div className="pl-corner pl-corner-bl" />
+      <div className="pl-corner pl-corner-br" />
 
-      {/* Content */}
-      <div className="preloader-content">
-        
-        <div className="logo-container">
+      {/* Main content */}
+      <div className="pl-body">
+        {/* Icon */}
+        <div className="pl-icon">
           <Image
-            src="/logo/logo-v1.png"
-            alt="Logo"
-            width={450}
-            height={450}
+            src="/logo/logo-v2.png"
+            alt="Devsomeware"
+            width={56}
+            height={56}
             priority
-            className="preloader-logo"
+            className="pl-img"
           />
         </div>
 
-        <div className="loading-bar-container">
-          <div className="loading-bar"></div>
-        </div>
+        {/* Scramble brand */}
+        <p className="pl-brand">{brand}</p>
 
+        {/* Tagline */}
+        <p className="pl-tagline">Software that actually works</p>
+
+        {/* Progress bar + counter */}
+        <div className="pl-progress-wrap">
+          <div className="pl-track">
+            <div className="pl-fill" style={{ width: `${count}%` }} />
+          </div>
+          <div className="pl-meta">
+            <span className="pl-label">Initialising</span>
+            <span className="pl-count">{String(count).padStart(2, '0')}%</span>
+          </div>
+        </div>
       </div>
 
       <style jsx>{`
-        .preloader-container {
+        .pl-wrap {
           position: fixed;
           inset: 0;
-          overflow: hidden;
+          z-index: 9999;
+          background: #000;
           display: flex;
           align-items: center;
           justify-content: center;
-          z-index: 9999;
-          animation: preloaderFade 2.5s ease-in-out forwards;
+          overflow: hidden;
+          animation: plFade 2.5s ease-in-out forwards;
         }
 
-        /* Background */
-        .preloader-bg {
+        .pl-noise {
           position: absolute;
           inset: 0;
-          background-image: url('/assets/bg.png');
-          background-size: cover;
-          background-position: center;
-          background-repeat: no-repeat;
-          z-index: 0;
-        }
-
-        /* FULLSCREEN GLASS LAYER */
-        .preloader-glass {
-          position: absolute;
-          inset: 0;
-          z-index: 1;
-          background: rgba(0, 0, 0, 0.55);
-          backdrop-filter: blur(140px) saturate(180%);
-          -webkit-backdrop-filter: blur(140px) saturate(180%);
-        }
-
-        /* Noise */
-        .preloader-noise {
-          position: absolute;
-          inset: 0;
-          z-index: 2;
           background-image: url('/assets/noise.png');
-          background-repeat: repeat;
           background-size: 200px 200px;
-          opacity: 0.04;
+          opacity: 0.045;
           mix-blend-mode: soft-light;
           pointer-events: none;
+          z-index: 1;
         }
 
-        /* Content */
-        .preloader-content {
+        .pl-glow {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(
+            ellipse 65% 45% at 50% 50%,
+            rgba(255, 255, 255, 0.045) 0%,
+            transparent 70%
+          );
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        /* Corner decoration lines */
+        .pl-corner {
+          position: absolute;
+          z-index: 2;
+          pointer-events: none;
+        }
+        .pl-corner::before,
+        .pl-corner::after {
+          content: '';
+          position: absolute;
+          background: rgba(255, 255, 255, 0.12);
+        }
+        .pl-corner::before { width: 28px; height: 1px; }
+        .pl-corner::after  { width: 1px; height: 28px; }
+
+        .pl-corner-tl { top: 28px; left: 28px; }
+        .pl-corner-tl::before { top: 0; left: 0; }
+        .pl-corner-tl::after  { top: 0; left: 0; }
+
+        .pl-corner-tr { top: 28px; right: 28px; }
+        .pl-corner-tr::before { top: 0; right: 0; left: auto; }
+        .pl-corner-tr::after  { top: 0; right: 0; left: auto; }
+
+        .pl-corner-bl { bottom: 28px; left: 28px; }
+        .pl-corner-bl::before { bottom: 0; top: auto; left: 0; }
+        .pl-corner-bl::after  { bottom: 0; top: auto; left: 0; }
+
+        .pl-corner-br { bottom: 28px; right: 28px; }
+        .pl-corner-br::before { bottom: 0; top: auto; right: 0; left: auto; }
+        .pl-corner-br::after  { bottom: 0; top: auto; right: 0; left: auto; }
+
+        /* Body */
+        .pl-body {
           position: relative;
           z-index: 3;
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 1.5rem;
-          padding: 1rem;
-          margin-top: -6vh;
+          gap: 1.6rem;
+          animation: plReveal 0.5s ease-out forwards;
         }
 
-        .preloader-logo {
+        @keyframes plReveal {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Icon */
+        .pl-icon {
+          position: relative;
+          width: 56px;
+          height: 56px;
+          animation: plPulse 2.2s ease-in-out infinite;
+        }
+        .pl-img {
           width: 100% !important;
           height: auto !important;
-          max-width: 340px;
-          filter: drop-shadow(0 0 40px rgba(0, 0, 0, 0.5));
         }
 
-        .loading-bar-container {
-          width: 100%;
-          max-width: 420px;
-          height: 4px;
-          background: rgba(255, 255, 255, 0.15);
+        @keyframes plPulse {
+          0%, 100% { filter: drop-shadow(0 0 18px rgba(255,255,255,0.10)); }
+          50%       { filter: drop-shadow(0 0 32px rgba(255,255,255,0.22)); }
+        }
+
+        /* Brand */
+        .pl-brand {
+          font-family: var(--font-museo-moderno);
+          font-size: clamp(1.3rem, 3.8vw, 2rem);
+          font-weight: 900;
+          letter-spacing: 0.2em;
+          color: rgba(255, 255, 255, 0.88);
+          line-height: 1;
+          margin: 0;
+          min-width: 13ch;
+          text-align: center;
+        }
+
+        /* Tagline */
+        .pl-tagline {
+          font-family: var(--font-geist-sans);
+          font-size: 11px;
+          letter-spacing: 0.08em;
+          color: rgba(255, 255, 255, 0.22);
+          margin: -0.8rem 0 0;
+          text-align: center;
+        }
+
+        /* Progress */
+        .pl-progress-wrap {
+          width: min(280px, 76vw);
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .pl-track {
+          height: 1px;
+          background: rgba(255, 255, 255, 0.1);
           border-radius: 999px;
           overflow: hidden;
         }
 
-        .loading-bar {
-          width: 100%;
+        .pl-fill {
           height: 100%;
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            #ffffff 30%,
-            #f5f5f5 50%,
-            #ffffff 70%,
-            transparent 100%
-          );
-          background-size: 200% 100%;
-          animation: loadingSlide 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+          background: linear-gradient(90deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.82) 100%);
+          border-radius: 999px;
+          transition: width 0.04s linear;
         }
 
-        @keyframes loadingSlide {
-          0% {
-            transform: translateX(-100%);
-            background-position: 0% center;
-          }
-          100% {
-            transform: translateX(0);
-            background-position: 200% center;
-          }
+        .pl-meta {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
         }
 
-        @keyframes preloaderFade {
-          0% { opacity: 0; }
+        .pl-label {
+          font-family: var(--font-geist-mono);
+          font-size: 9px;
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, 0.2);
+        }
+
+        .pl-count {
+          font-family: var(--font-geist-mono);
+          font-size: 11px;
+          letter-spacing: 0.06em;
+          color: rgba(255, 255, 255, 0.42);
+          font-variant-numeric: tabular-nums;
+        }
+
+        @keyframes plFade {
+          0%  { opacity: 0; }
           10% { opacity: 1; }
-          90% { opacity: 1; }
-          100% { opacity: 0; visibility: hidden; }
+          84% { opacity: 1; }
+          100%{ opacity: 0; }
         }
 
-        /* Tablet */
-        @media (max-width: 768px) {
-          .preloader-logo {
-            max-width: 240px;
-          }
-
-          .loading-bar-container {
-            max-width: 280px;
-            height: 3px;
-          }
-        }
-
-        /* Mobile */
         @media (max-width: 480px) {
-          .preloader-logo {
-            max-width: 180px;
-          }
-
-          .loading-bar-container {
-            max-width: 200px;
-            height: 2px;
-          }
+          .pl-icon { width: 44px; height: 44px; }
+          .pl-corner-tl,
+          .pl-corner-tr,
+          .pl-corner-bl,
+          .pl-corner-br { display: none; }
         }
       `}</style>
     </div>

@@ -2,17 +2,19 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const navLinks = [
-  { label: "About Us", href: "#about" },
-  { label: "Services", href: "#services" },
+  { label: "Work", href: "/work" },
+  { label: "Services", href: "/services" },
+  { label: "About Us", href: "/about" },
   { label: "Contact Us", href: "/contact" },
-  { label: "Privacy Policy", href: "#privacy" },
-  { label: "Terms & Conditions", href: "#terms" },
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms & Conditions", href: "/terms" },
 ];
 
 const LinkedIn = () => (
@@ -21,9 +23,9 @@ const LinkedIn = () => (
   </svg>
 );
 
-const YouTube = () => (
-  <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+const Threads = () => (
+  <svg width="16" height="16" viewBox="0 0 192 192" fill="currentColor">
+    <path d="M141.537 88.988a66.667 66.667 0 0 0-2.518-1.143c-1.482-27.307-16.403-42.94-41.457-43.1h-.34c-14.986 0-27.449 6.396-35.12 18.035l13.198 9.043c5.51-8.357 14.163-10.153 21.943-10.153h.23c8.48.054 14.883 2.516 19.024 7.313 3.005 3.47 5.013 8.235 5.994 14.2a102.158 102.158 0 0 0-13.733-1.164c-13.863 0-24.91 3.655-32.867 10.87-7.87 7.134-11.877 16.957-11.6 27.597.523 19.726 16.017 31.33 37.37 31.33 12.84 0 23.294-3.634 30.453-10.506 5.515-5.282 9.132-12.557 10.764-21.667 3.697 2.33 6.45 5.394 8.27 9.23 3.195 6.79 3.374 17.966-6.573 27.912-8.797 8.8-19.373 12.616-35.403 12.727-17.76-.124-31.23-5.831-40.025-16.967-8.195-10.416-12.415-25.378-12.54-44.478.125-19.1 4.345-34.063 12.54-44.478 8.795-11.136 22.265-16.843 40.025-16.967 17.918.125 31.788 5.864 41.2 17.053 4.57 5.502 8.006 12.39 10.2 20.464l15.463-4.124c-2.798-10.155-7.345-18.938-13.583-26.173-12.748-15.34-31.385-23.246-55.281-23.508l-.405.001c-23.835.263-42.066 8.198-54.351 23.575C28.024 55.815 22.705 74.5 22.543 96c.162 21.5 5.481 40.185 15.822 55.6 12.285 15.377 30.516 23.312 54.351 23.575l.405.001c21.267-.234 36.286-5.735 48.614-18.063 15.872-15.86 15.405-35.886 10.176-48.05-3.916-8.824-11.14-16.044-20.374-20.075Z" />
   </svg>
 );
 
@@ -40,10 +42,10 @@ const XTwitter = () => (
 );
 
 const socialLinks = [
-  { Icon: LinkedIn, href: "https://linkedin.com", label: "LinkedIn" },
-  { Icon: YouTube, href: "https://youtube.com", label: "YouTube" },
-  { Icon: Instagram, href: "https://instagram.com", label: "Instagram" },
-  { Icon: XTwitter, href: "https://x.com", label: "X / Twitter" },
+  { Icon: Instagram, href: "https://www.instagram.com/devsomeware/", label: "Instagram" },
+  { Icon: LinkedIn, href: "https://www.linkedin.com/company/devsomeware/", label: "LinkedIn" },
+  { Icon: XTwitter, href: "https://x.com/DevSomware", label: "X / Twitter" },
+  { Icon: Threads, href: "https://www.threads.com/@devsomeware", label: "Threads" },
 ];
 
 export default function Footer() {
@@ -123,7 +125,7 @@ export default function Footer() {
     >
       {/* Noise texture */}
       <div
-        className="absolute inset-0 pointer-events-none z-10 bg-[url('/assets/noise.png')] bg-repeat bg-[length:200px_200px] opacity-[0.06] mix-blend-soft-light"
+        className="absolute inset-0 pointer-events-none z-10 bg-[url('/assets/noise.png')] bg-repeat bg-size-[200px_200px] opacity-[0.06] mix-blend-soft-light"
         aria-hidden="true"
       />
       {/* Ambient radial glow */}
@@ -168,7 +170,7 @@ export default function Footer() {
               />
             </div>
             <span
-              className="font-[family-name:var(--font-museo-moderno)] text-white/80 font-bold text-sm"
+              className="font-(family-name:--font-museo-moderno) text-white/80 font-bold text-sm"
               style={{ letterSpacing: "0.06em" }}
             >
               DEVSOMEWARE
@@ -184,13 +186,13 @@ export default function Footer() {
             <ul className="flex flex-wrap justify-center sm:justify-start items-center gap-x-6 sm:gap-x-8 gap-y-3 sm:gap-y-0">
               {navLinks.map(({ label, href }) => (
                 <li key={label}>
-                  <a
+                  <Link
                     href={href}
                     className="relative text-white/38 text-[12px] sm:text-[13px] hover:text-white/70 transition-colors duration-200 tracking-wide group"
                   >
                     {label}
                     <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-white/35 transition-all duration-300 group-hover:w-full" />
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -253,7 +255,7 @@ export default function Footer() {
       >
         <p
           ref={wordmarkTextRef}
-          className="mx-auto w-max font-[family-name:var(--font-museo-moderno)] leading-[0.88] whitespace-nowrap text-center"
+          className="mx-auto w-max font-(family-name:--font-museo-moderno) leading-[0.88] whitespace-nowrap text-center"
           style={{
             fontSize: "240px",
             letterSpacing: "-0.02em",

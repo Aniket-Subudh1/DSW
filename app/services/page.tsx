@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
+import Footer from "@/app/components/Footer";
 
 gsap.registerPlugin(ScrollTrigger, ScrambleTextPlugin);
 
@@ -1130,6 +1131,7 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 }

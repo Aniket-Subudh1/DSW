@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { useOutsideClick } from "@/hooks/use-outside-click";
+import Footer from "@/app/components/Footer";
 
 const REVENUE_OPTIONS = [
   "Pre-revenue",
@@ -384,6 +385,7 @@ export default function ContactPage() {
           )}
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

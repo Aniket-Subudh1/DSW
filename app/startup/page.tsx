@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { useOutsideClick } from "@/hooks/use-outside-click";
+import Footer from "@/app/components/Footer";
 
 const STAGE_OPTIONS = ["Idea / Pre-seed", "MVP / Seed", "Series A", "Series B+", "Bootstrapped"];
 
@@ -389,6 +390,7 @@ export default function StartupPage() {
           )}
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
