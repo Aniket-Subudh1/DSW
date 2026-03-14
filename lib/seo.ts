@@ -4,7 +4,7 @@ const FALLBACK_SITE_URL = "https://www.devsomeware.com";
 
 export const SITE_CONFIG = {
   name: "Devsomeware",
-  legalName: "Devsomeware Technology Private Limited",
+  legalName: "Devsomeware Private Limited",
   title: "Devsomeware | Software Development Company for Startups & Businesses",
   description:
     "Devsomeware builds high-performance websites, SaaS products, MVPs, internal tools, and growth-focused software for startups and companies.",
