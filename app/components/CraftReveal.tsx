@@ -155,38 +155,7 @@ const CircuitBackground = memo(() => (
 CircuitBackground.displayName = "CircuitBackground";
 
 
-const ScanLine = memo(() => {
-  const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!ref.current) return;
-    const tween = gsap.fromTo(
-      ref.current,
-      { top: "-2%" },
-      { top: "102%", duration: 10, ease: "none", repeat: -1 }
-    );
-    return () => {
-      tween.kill();
-    };
-  }, []);
-
-  return (
-    <div
-      className="absolute inset-0 pointer-events-none z-[5] overflow-hidden"
-      aria-hidden="true"
-    >
-      <div
-        ref={ref}
-        className="absolute left-0 right-0 h-[1px]"
-        style={{
-          background:
-            "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 20%, rgba(255,255,255,0.08) 80%, transparent 100%)",
-        }}
-      />
-    </div>
-  );
-});
-ScanLine.displayName = "ScanLine";
 
 
 const SectionLabel = memo(({ text }: { text: string }) => {
@@ -236,10 +205,10 @@ const SectionLabel = memo(({ text }: { text: string }) => {
       </div>
       <span
         ref={textRef}
-        className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-white/60 font-[family-name:var(--font-geist-mono)]"
+        className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-white/60 font-(family-name:--font-geist-mono)"
         aria-label={text}
       />
-      <span className="flex-1 h-px bg-gradient-to-r from-white/20 to-transparent" />
+      <span className="flex-1 h-px bg-linear-to-r from-white/20 to-transparent" />
     </div>
   );
 });
@@ -255,125 +224,27 @@ const ProjectCard = memo(
   }) => {
     const rowRef = useRef<HTMLDivElement>(null);
     const cardRef = useRef<HTMLDivElement>(null);
-    const imageRef = useRef<HTMLDivElement>(null);
-    const detailRef = useRef<HTMLDivElement>(null);
-    const lineRef = useRef<HTMLDivElement>(null);
-    const tagRefs = useRef<HTMLDivElement>(null);
     const glowRef = useRef<HTMLDivElement>(null);
-    const numberRef = useRef<HTMLSpanElement>(null);
 
     useEffect(() => {
       if (!rowRef.current) return;
-      const ctx = gsap.context(() => {
-        // Set initial states
-        gsap.set(rowRef.current, { opacity: 0 });
-        gsap.set(lineRef.current, { scaleX: 0, transformOrigin: "left" });
-        gsap.set(cardRef.current, {
-          opacity: 0,
-          y: 50,
-          scale: 0.96,
-          rotateX: 4,
-        });
-        gsap.set(imageRef.current, { opacity: 0, scale: 1.1 });
-        gsap.set(detailRef.current, { opacity: 0, x: 20 });
-
-        const tl = gsap.timeline({
+      const tween = gsap.fromTo(
+        rowRef.current,
+        { opacity: 0, y: 24 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power2.out",
           scrollTrigger: {
             trigger: rowRef.current,
             start: "top 80%",
             once: true,
           },
-        });
-
-        // Row fades in
-        tl.to(rowRef.current, {
-          opacity: 1,
-          duration: 0.3,
-        });
-
-        // Top line draws
-        tl.to(lineRef.current, {
-          scaleX: 1,
-          duration: 0.9,
-          ease: "power2.inOut",
-        }, 0.1);
-
-        // Number scramble
-        if (numberRef.current) {
-          const finalId = project.id;
-          tl.to(
-            numberRef.current,
-            {
-              duration: 0.8,
-              scrambleText: {
-                text: finalId,
-                chars: "0123456789",
-                revealDelay: 0.1,
-                speed: 0.6,
-              },
-              ease: "none",
-            },
-            0.2
-          );
         }
-
-        // Card flies in — the main reveal
-        tl.to(
-          cardRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            rotateX: 0,
-            duration: 0.8,
-            ease: "power3.out",
-          },
-          0.25
-        );
-
-        // Image reveals inside card
-        tl.to(
-          imageRef.current,
-          {
-            opacity: 1,
-            scale: 1,
-            duration: 0.7,
-            ease: "power2.out",
-          },
-          0.45
-        );
-
-        // Details slide in
-        tl.to(
-          detailRef.current,
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.6,
-            ease: "power2.out",
-          },
-          0.5
-        );
-
-        // Tags stagger
-        if (tagRefs.current) {
-          const tags = tagRefs.current.querySelectorAll("span");
-          tl.fromTo(
-            tags,
-            { opacity: 0, y: 8 },
-            {
-              opacity: 1,
-              y: 0,
-              stagger: 0.05,
-              duration: 0.3,
-              ease: "power2.out",
-            },
-            0.65
-          );
-        }
-      }, rowRef);
-      return () => ctx.revert();
-    }, [index, project.id]);
+      );
+      return () => { tween.kill(); };
+    }, [index]);
 
     // Hover — glow + lift
     const onEnter = useCallback(() => {
@@ -416,11 +287,9 @@ const ProjectCard = memo(
       <div ref={rowRef} className="relative w-full" style={{ opacity: 0 }}>
         {/* Top separator line */}
         <div
-          ref={lineRef}
           className="w-full h-px mb-6 sm:mb-8"
           style={{
             background: `linear-gradient(90deg, transparent, ${project.accent}50 20%, ${project.accent}50 80%, transparent)`,
-            transform: "scaleX(0)",
           }}
         />
 
@@ -428,34 +297,33 @@ const ProjectCard = memo(
         <div
           className={`flex flex-col ${
             isEven ? "lg:flex-row" : "lg:flex-row-reverse"
-          } gap-5 sm:gap-6 lg:gap-10 items-start lg:items-center mb-10 sm:mb-14 lg:mb-18`}
+          } gap-5 sm:gap-6 lg:gap-8 items-start lg:items-center mb-6 sm:mb-8 lg:mb-10`}
         >
           {/* Number + meta gutter */}
           <div
             className={`shrink-0 flex lg:flex-col gap-3 lg:gap-2 items-baseline lg:items-start ${
-              isEven ? "lg:w-[160px] xl:w-[200px]" : "lg:w-[160px] xl:w-[200px]"
+              isEven ? "lg:w-40 xl:w-50" : "lg:w-40 xl:w-50"
             }`}
           >
             <span
-              ref={numberRef}
-              className="text-[48px] sm:text-[64px] lg:text-[80px] font-black font-[family-name:var(--font-museo-moderno)] leading-none tabular-nums select-none"
+              className="text-[32px] sm:text-[40px] lg:text-[48px] font-black font-(family-name:--font-museo-moderno) leading-none tabular-nums select-none"
               style={{ color: `${project.accent}25` }}
             >
-              ██
+              {project.id}
             </span>
             <div className="flex flex-col gap-1">
               <div
-                className="h-[2px] w-8 rounded-full"
+                className="h-0.5 w-8 rounded-full"
                 style={{ background: `${project.accent}50` }}
               />
-              <span className="text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-white/40 font-[family-name:var(--font-geist-mono)]">
+              <span className="text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-white/40 font-(family-name:--font-geist-mono)">
                 Project {project.id}
               </span>
             </div>
           </div>
 
           {/* The card — image + details */}
-          <div className="relative flex-1 w-full max-w-[900px]">
+          <div className="relative flex-1 w-full max-w-225">
             {/* Accent glow */}
             <div
               ref={glowRef}
@@ -476,14 +344,11 @@ const ProjectCard = memo(
                 border: "1px solid rgba(255,255,255,0.08)",
                 boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
                 background: "rgba(255,255,255,0.02)",
-                transformStyle: "preserve-3d",
-                perspective: "1200px",
-                opacity: 0,
               }}
             >
               {/* Top accent bar */}
               <div
-                className="h-[2px] w-full"
+                className="h-0.5 w-full"
                 style={{
                   background: `linear-gradient(90deg, ${project.accent}60, ${project.accent}30, transparent)`,
                 }}
@@ -492,12 +357,8 @@ const ProjectCard = memo(
               <div className="flex flex-col sm:flex-row">
                 {/* Image area */}
                 <div
-                  ref={imageRef}
                   className="relative w-full sm:w-[45%] lg:w-[40%] shrink-0 overflow-hidden"
-                  style={{
-                    minHeight: "200px",
-                    opacity: 0,
-                  }}
+                  style={{ minHeight: "160px" }}
                 >
                   <Image
                     src={project.image}
@@ -531,7 +392,7 @@ const ProjectCard = memo(
                   />
                   {/* Project number watermark on image */}
                   <span
-                    className="absolute bottom-3 left-4 text-[56px] font-black font-[family-name:var(--font-museo-moderno)] leading-none select-none"
+                    className="absolute bottom-3 left-4 text-[56px] font-black font-(family-name:--font-museo-moderno) leading-none select-none"
                     style={{ color: `${project.accent}12` }}
                   >
                     {project.id}
@@ -540,12 +401,10 @@ const ProjectCard = memo(
 
                 {/* Details area */}
                 <div
-                  ref={detailRef}
-                  className="flex-1 p-5 sm:p-6 lg:p-8 flex flex-col justify-center gap-3 sm:gap-4"
-                  style={{ opacity: 0 }}
+                  className="flex-1 p-4 sm:p-5 lg:p-6 flex flex-col justify-center gap-2 sm:gap-3"
                 >
                   <div>
-                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white/90 font-[family-name:var(--font-museo-moderno)] leading-tight tracking-tight">
+                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white/90 font-(family-name:--font-museo-moderno) leading-tight tracking-tight">
                       {project.name}
                     </h3>
                     <p
@@ -556,20 +415,19 @@ const ProjectCard = memo(
                     </p>
                   </div>
 
-                  <p className="text-xs sm:text-sm text-white/45 leading-[1.7]">
+                  <p className="text-xs sm:text-sm text-white/45 leading-[1.7] line-clamp-2">
                     {project.description}
                   </p>
 
                   {/* Tags */}
-                  <div ref={tagRefs} className="flex flex-wrap gap-2 mt-1">
+                  <div className="flex flex-wrap gap-2">
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-[9px] sm:text-[10px] font-semibold tracking-[0.1em] uppercase px-3 py-1 text-white/45 font-[family-name:var(--font-geist-mono)] hover:text-white/70 transition-colors duration-200"
+                        className="text-[9px] sm:text-[10px] font-semibold tracking-widest uppercase px-3 py-1 text-white/45 font-(family-name:--font-geist-mono) hover:text-white/70 transition-colors duration-200"
                         style={{
                           border: `1px solid ${project.accent}25`,
                           background: `${project.accent}08`,
-                          opacity: 0,
                         }}
                       >
                         {tag}
@@ -578,7 +436,7 @@ const ProjectCard = memo(
                   </div>
 
                   {/* View project link */}
-                  <div className="mt-2">
+                  <div>
                     <span
                       className="inline-flex items-center gap-2 text-[10px] sm:text-xs font-semibold tracking-[0.12em] uppercase cursor-pointer group/link transition-colors duration-300"
                       style={{ color: `${project.accent}80` }}
@@ -613,199 +471,6 @@ const ProjectCard = memo(
   }
 );
 ProjectCard.displayName = "ProjectCard";
-
-const TestimonialCard = memo(
-  ({
-    t,
-    index,
-    isActive,
-    onClick,
-  }: {
-    t: (typeof TESTIMONIALS)[number];
-    index: number;
-    isActive: boolean;
-    onClick: () => void;
-  }) => {
-    const ref = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-      if (!ref.current) return;
-      const tween = gsap.fromTo(
-        ref.current,
-        { opacity: 0, y: 30, filter: "blur(3px)" },
-        {
-          opacity: 1,
-          y: 0,
-          filter: "blur(0px)",
-          duration: 0.7,
-          delay: 0.1 + index * 0.12,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ref.current,
-            start: "top 88%",
-            once: true,
-          },
-        }
-      );
-      return () => {
-        tween.kill();
-      };
-    }, [index]);
-
-    return (
-      <div
-        ref={ref}
-        onClick={onClick}
-        className="relative cursor-pointer transition-all duration-500 group lg:col-span-1"
-        style={{ opacity: 0 }}
-      >
-        <div
-          className={`relative h-full overflow-hidden transition-all duration-500 ${
-            isActive
-              ? "border border-white/20 bg-white/[0.04]"
-              : "border border-white/[0.06] bg-transparent hover:border-white/15 hover:bg-white/[0.02]"
-          }`}
-        >
-          {/* Top accent */}
-          <div
-            className="absolute top-0 left-0 right-0 h-px transition-opacity duration-500"
-            style={{
-              background:
-                "linear-gradient(90deg, transparent, rgba(255,255,255,0.25) 30%, rgba(255,255,255,0.25) 70%, transparent)",
-              opacity: isActive ? 1 : 0,
-            }}
-          />
-
-          <div
-            className={`p-5 sm:p-6 lg:p-7 transition-all duration-500 ${
-              isActive ? "p-6 sm:p-7 lg:p-8" : ""
-            }`}
-          >
-            {/* Quote SVG */}
-            <svg
-              width={isActive ? "44" : "28"}
-              height={isActive ? "44" : "28"}
-              viewBox="0 0 48 48"
-              fill="none"
-              className={`mb-4 transition-all duration-500 ${
-                isActive
-                  ? "opacity-20"
-                  : "opacity-[0.07] group-hover:opacity-[0.12]"
-              }`}
-            >
-              <path
-                d="M18 14H10C7.79 14 6 15.79 6 18V26C6 28.21 7.79 30 10 30H15L12 38H17L20 30V18C20 15.79 18.21 14 16 14H18ZM38 14H30C27.79 14 26 15.79 26 18V26C26 28.21 27.79 30 30 30H35L32 38H37L40 30V18C40 15.79 38.21 14 36 14H38Z"
-                fill="white"
-              />
-            </svg>
-
-            {/* Quote text */}
-            <p
-              className={`leading-[1.75] mb-6 transition-all duration-500 ${
-                isActive
-                  ? "text-sm sm:text-base lg:text-lg text-white/60"
-                  : "text-xs sm:text-sm text-white/45 group-hover:text-white/55"
-              }`}
-            >
-              &ldquo;{t.text}&rdquo;
-            </p>
-
-            {/* Author */}
-            <div className="flex items-center gap-3 mt-auto">
-              <div
-                className={`relative shrink-0 rounded-full flex items-center justify-center font-bold font-[family-name:var(--font-geist-mono)] tracking-wider transition-all duration-500 ${
-                  isActive
-                    ? "w-11 h-11 text-[11px] border-2 border-white/25 text-white/70 bg-white/[0.04]"
-                    : "w-9 h-9 text-[9px] border border-white/10 text-white/40"
-                }`}
-              >
-                {t.author
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")}
-                {/* Spinning ring on active */}
-                {isActive && (
-                  <svg
-                    className="absolute inset-[-4px] w-[calc(100%+8px)] h-[calc(100%+8px)] -rotate-90"
-                    viewBox="0 0 48 48"
-                  >
-                    <circle
-                      cx="24"
-                      cy="24"
-                      r="22"
-                      fill="none"
-                      stroke="rgba(255,255,255,0.06)"
-                      strokeWidth="1"
-                    />
-                    <circle
-                      cx="24"
-                      cy="24"
-                      r="22"
-                      fill="none"
-                      stroke="rgba(255,255,255,0.30)"
-                      strokeWidth="1.5"
-                      strokeDasharray={2 * Math.PI * 22}
-                      strokeDashoffset={2 * Math.PI * 22 * 0.7}
-                      strokeLinecap="round"
-                    >
-                      <animateTransform
-                        attributeName="transform"
-                        type="rotate"
-                        from="0 24 24"
-                        to="360 24 24"
-                        dur="4s"
-                        repeatCount="indefinite"
-                      />
-                    </circle>
-                  </svg>
-                )}
-              </div>
-              <div>
-                <span
-                  className={`block font-semibold leading-none transition-all duration-500 ${
-                    isActive
-                      ? "text-sm text-white/80"
-                      : "text-xs text-white/55"
-                  }`}
-                >
-                  {t.author}
-                </span>
-                <span
-                  className={`block mt-1 leading-none transition-all duration-500 ${
-                    isActive
-                      ? "text-xs text-white/40"
-                      : "text-[10px] text-white/25"
-                  }`}
-                >
-                  {t.title}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Expand indicator */}
-          <div
-            className={`absolute bottom-4 right-4 transition-all duration-500 ${
-              isActive
-                ? "opacity-30 rotate-45"
-                : "opacity-[0.12] group-hover:opacity-25"
-            }`}
-          >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path
-                d="M1 7h12M7 1v12"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-    );
-  }
-);
-TestimonialCard.displayName = "TestimonialCard";
 
 const SectionDivider = memo(() => {
   const ref = useRef<HTMLDivElement>(null);
@@ -846,7 +511,7 @@ const SectionDivider = memo(() => {
       />
       <div data-anim className="flex items-center gap-2.5 origin-center">
         <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
-        <span className="text-[9px] sm:text-[11px] tracking-[0.25em] uppercase text-white/40 font-[family-name:var(--font-geist-mono)] whitespace-nowrap">
+        <span className="text-[9px] sm:text-[11px] tracking-[0.25em] uppercase text-white/40 font-(family-name:--font-geist-mono) whitespace-nowrap">
           Client Voices
         </span>
         <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
@@ -867,14 +532,28 @@ SectionDivider.displayName = "SectionDivider";
 export default function CraftReveal() {
   const sectionRef = useRef<HTMLElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const currentIdxRef = useRef(0);
+
+  const slideTo = useCallback((raw: number) => {
+    const newIdx = Math.min(Math.max(0, raw), TESTIMONIALS.length - 2);
+    currentIdxRef.current = newIdx;
+    setCurrentIdx(newIdx);
+    if (trackRef.current && carouselRef.current) {
+      const cardW = carouselRef.current.offsetWidth / 2;
+      gsap.to(trackRef.current, { x: -newIdx * cardW, duration: 0.55, ease: "power2.inOut" });
+    }
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveTestimonial((prev) => (prev + 1) % TESTIMONIALS.length);
+      const next = currentIdxRef.current >= TESTIMONIALS.length - 2 ? 0 : currentIdxRef.current + 1;
+      slideTo(next);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [slideTo]);
 
   useEffect(() => {
     if (!counterRef.current) return;
@@ -908,12 +587,11 @@ export default function CraftReveal() {
     >
       {/* Noise */}
       <div
-        className="absolute inset-0 pointer-events-none z-[6] bg-[url('/assets/noise.png')] bg-repeat bg-[length:200px_200px] opacity-[0.07] mix-blend-soft-light"
+        className="absolute inset-0 pointer-events-none z-6 bg-[url('/assets/noise.png')] bg-repeat bg-size-[200px_200px] opacity-[0.07] mix-blend-soft-light"
         aria-hidden="true"
       />
 
       <CircuitBackground />
-      <ScanLine />
 
       <div className="relative z-10 w-full px-5 sm:px-8 lg:px-16 xl:px-24 pt-16 sm:pt-20 lg:pt-28">
         <SectionLabel text="// selected work" />
@@ -921,10 +599,10 @@ export default function CraftReveal() {
         {/* Heading row */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 lg:gap-10 mb-12 sm:mb-16 lg:mb-20">
           <div>
-            <h2 className="text-[clamp(2.2rem,5.5vw,4rem)] font-bold text-white font-[family-name:var(--font-museo-moderno)] leading-[1.0] tracking-tight">
+            <h2 className="text-[clamp(2.2rem,5.5vw,4rem)] font-bold text-white font-(family-name:--font-museo-moderno) leading-none tracking-tight">
               Our Craft
             </h2>
-            <p className="text-sm sm:text-base text-white/45 mt-3 max-w-[480px] leading-[1.7]">
+            <p className="text-sm sm:text-base text-white/45 mt-3 max-w-120 leading-[1.7]">
               Every project is treated as a product - architected for scale,
               designed for users, shipped with precision.
             </p>
@@ -934,7 +612,7 @@ export default function CraftReveal() {
           <div className="flex items-baseline gap-3 select-none shrink-0">
             <span
               ref={counterRef}
-              className="text-[64px] sm:text-[80px] lg:text-[112px] font-black font-[family-name:var(--font-museo-moderno)] leading-none tabular-nums"
+              className="text-[64px] sm:text-[80px] lg:text-[112px] font-black font-(family-name:--font-museo-moderno) leading-none tabular-nums"
               style={{
                 background:
                   "linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%)",
@@ -946,10 +624,10 @@ export default function CraftReveal() {
               00
             </span>
             <div className="flex flex-col gap-0.5 mb-2">
-              <span className="text-[10px] sm:text-[11px] text-white/35 tracking-[0.2em] uppercase font-[family-name:var(--font-geist-mono)] leading-none">
+              <span className="text-[10px] sm:text-[11px] text-white/35 tracking-[0.2em] uppercase font-(family-name:--font-geist-mono) leading-none">
                 projects
               </span>
-              <span className="text-[10px] sm:text-[11px] text-white/20 tracking-[0.2em] uppercase font-[family-name:var(--font-geist-mono)] leading-none">
+              <span className="text-[10px] sm:text-[11px] text-white/20 tracking-[0.2em] uppercase font-(family-name:--font-geist-mono) leading-none">
                 shipped
               </span>
             </div>
@@ -964,36 +642,104 @@ export default function CraftReveal() {
       <SectionDivider />
 
       <div className="relative z-10 w-full px-5 sm:px-8 lg:px-16 xl:px-24 pb-16 sm:pb-20 lg:pb-28">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {TESTIMONIALS.map((t, i) => (
-            <TestimonialCard
-              key={i}
-              t={t}
-              index={i}
-              isActive={activeTestimonial === i}
-              onClick={() => setActiveTestimonial(i)}
-            />
-          ))}
-        </div>
+        {/* Testimonials — 2-up GSAP slide carousel */}
+        <div className="relative w-full max-w-4xl mx-auto">
+          {/* Viewport — clips the sliding track */}
+          <div ref={carouselRef} className="overflow-hidden w-full">
+            <div ref={trackRef} className="flex will-change-transform">
+              {TESTIMONIALS.map((t, i) => (
+                <div key={i} className="w-1/2 shrink-0 px-2 sm:px-3">
+                  <div className="relative border border-white/10 bg-white/3 p-5 sm:p-6 h-full flex flex-col">
+                    {/* Top accent line */}
+                    <div
+                      className="absolute top-0 left-0 right-0 h-px"
+                      style={{
+                        background:
+                          "linear-gradient(90deg, transparent, rgba(255,255,255,0.20) 30%, rgba(255,255,255,0.20) 70%, transparent)",
+                      }}
+                    />
+                    {/* Quote icon */}
+                    <svg width="24" height="24" viewBox="0 0 48 48" fill="none" className="mb-4 opacity-15 shrink-0" aria-hidden="true">
+                      <path
+                        d="M18 14H10C7.79 14 6 15.79 6 18V26C6 28.21 7.79 30 10 30H15L12 38H17L20 30V18C20 15.79 18.21 14 16 14H18ZM38 14H30C27.79 14 26 15.79 26 18V26C26 28.21 27.79 30 30 30H35L32 38H37L40 30V18C40 15.79 38.21 14 36 14H38Z"
+                        fill="white"
+                      />
+                    </svg>
+                    <p className="text-sm text-white/60 leading-[1.8] mb-5 flex-1 line-clamp-4">
+                      &ldquo;{t.text}&rdquo;
+                    </p>
+                    <div className="flex items-center gap-3 mt-auto pt-4 border-t border-white/10">
+                      <div className="w-9 h-9 shrink-0 rounded-full border border-white/15 flex items-center justify-center text-xs font-bold text-white/50 font-(family-name:--font-geist-mono)">
+                        {t.author.split(" ").map((n) => n[0]).join("")}
+                      </div>
+                      <div>
+                        <span className="block text-sm font-semibold text-white/75 leading-none">
+                          {t.author}
+                        </span>
+                        <span className="block text-xs text-white/35 mt-1">
+                          {t.title}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-        {/* Pagination */}
-        <div className="flex items-center justify-center gap-2.5 mt-8">
-          {TESTIMONIALS.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setActiveTestimonial(i)}
-              className="group relative p-1"
-              aria-label={`Testimonial ${i + 1}`}
-            >
-              <span
-                className={`block rounded-full transition-all duration-500 ${
-                  activeTestimonial === i
-                    ? "w-7 h-2 bg-white/35"
-                    : "w-2 h-2 bg-white/15 group-hover:bg-white/25"
-                }`}
-              />
-            </button>
-          ))}
+          {/* Controls */}
+          <div className="flex items-center justify-between mt-6">
+            <div className="flex items-center gap-2.5">
+              {Array.from({ length: TESTIMONIALS.length - 1 }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => slideTo(i)}
+                  className="group relative p-1"
+                  aria-label={`Slide ${i + 1}`}
+                >
+                  <span
+                    className={`block rounded-full transition-all duration-300 ${
+                      currentIdx === i
+                        ? "w-7 h-2 bg-white/35"
+                        : "w-2 h-2 bg-white/15 group-hover:bg-white/25"
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => slideTo(currentIdx - 1)}
+                className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white/70 hover:border-white/25 transition-all duration-200"
+                aria-label="Previous testimonials"
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path
+                    d="M9 2L4 7l5 5"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+              <button
+                onClick={() => slideTo(currentIdx + 1)}
+                className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white/70 hover:border-white/25 transition-all duration-200"
+                aria-label="Next testimonials"
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path
+                    d="M5 2l5 5-5 5"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>

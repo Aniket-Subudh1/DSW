@@ -1,7 +1,6 @@
-﻿"use client";
+"use client";
 import React, {
   useEffect,
-  useId,
   useRef,
   useState,
   useCallback,
@@ -9,9 +8,8 @@ import React, {
   memo,
   Suspense,
 } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import Image from "next/image";
-import { useOutsideClick } from "@/hooks/use-outside-click";
 import dynamic from "next/dynamic";
 import deliveryImage from "@/public/assets/delivery.png";
 import gsap from "gsap";
@@ -25,100 +23,15 @@ const LottiePlayer = dynamic(() => import("lottie-react"), {
   loading: () => <div style={{ width: "100%", height: "100%" }} />,
 });
 
-const CORNER_POSITIONS: React.CSSProperties[] = [
-  { top: -5, left: -7 },
-  { top: -5, right: -7 },
-  { bottom: -5, left: -7 },
-  { bottom: -5, right: -7 },
-];
-
-const CORNER_DOT_STYLE: React.CSSProperties = {
-  position: "absolute",
-  width: 4,
-  height: 4,
-  borderRadius: "50%",
-  background: "rgba(0,0,0,0.25)",
-  opacity: 0,
-};
-
-const HEADING_STYLE: React.CSSProperties = {
-  fontSize: "clamp(1.5rem, 4vw, 2.5rem)",
-  letterSpacing: "-0.02em",
-  color: "rgba(0,0,0,0.88)",
-  lineHeight: 1.1,
-  margin: 0,
-};
-
-const UNDERLINE_STYLE: React.CSSProperties = {
-  display: "block",
-  height: "2px",
-  width: "100%",
-  marginTop: "0.3em",
-  background:
-    "linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 100%)",
-  borderRadius: "2px",
-  transform: "scaleX(0)",
-  transformOrigin: "left",
-};
-
-const BENTO_CARD_SHADOW = "0 1px 8px rgba(0,0,0,0.05)";
+const BENTO_CARD_SHADOW = "0 1px 8px rgba(0,0,0,0.3)";
 
 const SERVICE_TILE_STYLE: React.CSSProperties = {
-  transformStyle: "preserve-3d",
-  border: "1px dashed rgba(0,0,0,0.15)",
-  boxShadow: "0 2px 14px rgba(0,0,0,0.07)",
-  background: "rgba(255,255,255,0.92)",
-  backdropFilter: "blur(8px)",
+  border: "1px solid rgba(255,255,255,0.08)",
+  background: "rgba(255,255,255,0.03)",
+  transition: "border-color 0.3s ease, background-color 0.3s ease",
 };
 
-const SHIMMER_GRADIENT_STYLE: React.CSSProperties = {
-  background:
-    "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 38%, rgba(255,255,255,0.82) 90%, rgba(255,255,255,0.97) 98%)",
-};
 
-const MODAL_SHADOW =
-  "0 24px 64px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.08)";
-
-const IMAGE_OVERLAY_STYLE: React.CSSProperties = {
-  position: "absolute",
-  inset: 0,
-  background:
-    "linear-gradient(180deg, rgba(0,80,180,0.08) 0%, rgba(0,40,120,0.20) 100%)",
-  mixBlendMode: "multiply",
-  pointerEvents: "none",
-};
-
-const TILE_IMAGE_OVERLAY_STYLE: React.CSSProperties = {
-  position: "absolute",
-  inset: 0,
-  background:
-    "linear-gradient(180deg, rgba(0,80,180,0.18) 0%, rgba(0,40,120,0.32) 100%)",
-  mixBlendMode: "multiply",
-  zIndex: 1,
-  borderRadius: "inherit",
-  pointerEvents: "none",
-};
-
-const SCRAMBLE_INITIAL = {
-  text: "Our Services",
-  chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-  revealDelay: 0.2,
-  speed: 0.6,
-};
-
-const SCRAMBLE_HOVER = {
-  text: "Our Services",
-  chars: "▲▼◆●○□◇►◄▸❯❮✦✧⟡",
-  revealDelay: 0.05,
-  speed: 0.95,
-};
-
-const SCRAMBLE_TOUCH = {
-  text: "Our Services",
-  chars: "◆▲○□◇❯✦⟡",
-  revealDelay: 0.05,
-  speed: 0.9,
-};
 
 const STATS = [
   { label: "Projects shipped", note: "MVPs to enterprise" },
@@ -135,25 +48,11 @@ const STEPS = [
   { x: 270, num: "03", label: "LAUNCH", sub: "Ship & iterate" },
 ] as const;
 
-const ENGAGEMENT_MODELS = [
-  {
-    tag: "01",
-    headline: "Project-Based",
-    detail: "Defined scope, timeline & price.",
-    badge: "Popular",
-  },
-  {
-    tag: "02",
-    headline: "Ongoing Retainer",
-    detail: "Monthly hours for iteration & growth.",
-    badge: "Long-term",
-  },
-  {
-    tag: "03",
-    headline: "Team Extension",
-    detail: "Engineers embedded in your team.",
-    badge: "Flexible",
-  },
+const CAPABILITIES = [
+  { label: "Full-Stack Web",         pct: 98, note: "Next.js · Node · TypeScript" },
+  { label: "Cloud & DevOps",          pct: 93, note: "AWS · Docker · CI/CD" },
+  { label: "UI / UX Design",          pct: 91, note: "Figma · Motion · A11y" },
+  { label: "Mobile & Cross-platform", pct: 86, note: "React Native · Expo" },
 ] as const;
 
 const DELIVERABLE_ITEMS = [
@@ -163,69 +62,6 @@ const DELIVERABLE_ITEMS = [
   "Documentation & onboarding guide",
 ] as const;
 
-const ENGAGEMENT_ICONS = [
-  <svg key="icon-0" width="20" height="20" viewBox="0 0 32 32" fill="none">
-    <rect
-      x="4"
-      y="4"
-      width="24"
-      height="24"
-      rx="6"
-      stroke="rgba(0,0,0,0.32)"
-      strokeWidth="1.5"
-    />
-    <path
-      d="M10 16.5L14 20.5L22 11"
-      stroke="rgba(0,0,0,0.65)"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>,
-  <svg key="icon-1" width="20" height="20" viewBox="0 0 32 32" fill="none">
-    <circle
-      cx="16"
-      cy="16"
-      r="10"
-      stroke="rgba(0,0,0,0.32)"
-      strokeWidth="1.5"
-    />
-    <path
-      d="M16 9V16L20.5 18.5"
-      stroke="rgba(0,0,0,0.65)"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-    />
-  </svg>,
-  <svg key="icon-2" width="20" height="20" viewBox="0 0 32 32" fill="none">
-    <circle
-      cx="12"
-      cy="12"
-      r="3.5"
-      stroke="rgba(0,0,0,0.55)"
-      strokeWidth="1.5"
-    />
-    <circle
-      cx="21"
-      cy="12"
-      r="3.5"
-      stroke="rgba(0,0,0,0.30)"
-      strokeWidth="1.5"
-    />
-    <path
-      d="M5 26c0-4 3-7 7-7s7 3 7 7"
-      stroke="rgba(0,0,0,0.55)"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-    <path
-      d="M19 26c0-4 3-7 7-7"
-      stroke="rgba(0,0,0,0.30)"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-  </svg>,
-];
 
 type HProps = {
   pos: "top" | "bottom";
@@ -254,7 +90,7 @@ const H = memo(({ pos, offset, overhang, opacity, delay }: HProps) => (
       left: -overhang,
       right: -overhang,
       height: "2px",
-      backgroundColor: `rgba(0,0,0,${opacity})`,
+      backgroundColor: `rgba(255,255,255,${opacity})`,
       transformOrigin: "left",
     }}
   />
@@ -273,7 +109,7 @@ const V = memo(({ pos, offset, overhang, opacity, delay }: VProps) => (
       top: -overhang,
       bottom: -overhang,
       width: "2px",
-      backgroundColor: `rgba(0,0,0,${opacity})`,
+      backgroundColor: `rgba(255,255,255,${opacity})`,
       transformOrigin: "top",
     }}
   />
@@ -281,110 +117,53 @@ const V = memo(({ pos, offset, overhang, opacity, delay }: VProps) => (
 V.displayName = "V";
 
 const ServicesHeading = memo(() => {
-  const wrapRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
-  const underlineRef = useRef<HTMLSpanElement>(null);
-  const dotRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
-    if (!textRef.current || !wrapRef.current) return;
+    if (!ref.current || !textRef.current) return;
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: wrapRef.current,
-          start: "top 82%",
-          once: true,
-        },
-        defaults: { ease: "power3.out" },
-      });
-      tl.fromTo(
-        wrapRef.current,
-        { opacity: 0, y: 14 },
-        { opacity: 1, y: 0, duration: 0.5, clearProps: "opacity,y" },
-        0
-      );
-      tl.fromTo(
-        dotRefs.current.filter(Boolean),
-        { opacity: 0, scale: 0 },
+      gsap.fromTo(
+        ref.current,
+        { opacity: 0 },
         {
           opacity: 1,
-          scale: 1,
-          stagger: 0.07,
-          duration: 0.35,
-          ease: "back.out(2.5)",
+          duration: 0.4,
+          scrollTrigger: { trigger: ref.current, start: "top 85%", once: true },
+        }
+      );
+      gsap.to(textRef.current, {
+        duration: 1.4,
+        scrambleText: {
+          text: "// our services",
+          chars: "█▓▒░_/\\|<>{}[]",
+          revealDelay: 0.3,
+          speed: 0.5,
         },
-        0.1
-      );
-      tl.to(
-        textRef.current,
-        {
-          duration: 1.0,
-          scrambleText: SCRAMBLE_INITIAL,
-          ease: "none",
-        },
-        0.15
-      );
-      tl.fromTo(
-        underlineRef.current,
-        { scaleX: 0, transformOrigin: "left" },
-        { scaleX: 1, duration: 0.65, ease: "power4.out" },
-        0.75
-      );
-    }, wrapRef);
+        ease: "none",
+        scrollTrigger: { trigger: ref.current, start: "top 85%", once: true },
+      });
+    }, ref);
     return () => ctx.revert();
-  }, []);
-
-  const handleMouseEnter = useCallback(() => {
-    if (!textRef.current) return;
-    gsap.to(textRef.current, {
-      duration: 0.65,
-      scrambleText: SCRAMBLE_HOVER,
-      ease: "none",
-    });
-  }, []);
-
-  const handleTouchStart = useCallback(() => {
-    if (!textRef.current) return;
-    gsap.to(textRef.current, {
-      duration: 0.7,
-      scrambleText: SCRAMBLE_TOUCH,
-      ease: "none",
-    });
   }, []);
 
   return (
     <div
-      ref={wrapRef}
-      className="w-full flex justify-center mb-3 sm:mb-4"
+      ref={ref}
+      className="flex items-center gap-4 mb-6 sm:mb-8"
       style={{ opacity: 0 }}
     >
-      <div
-        className="relative inline-flex flex-col items-center cursor-default"
-        onMouseEnter={handleMouseEnter}
-        onTouchStart={handleTouchStart}
-      >
-        {CORNER_POSITIONS.map((style, i) => (
-          <span
-            key={i}
-            ref={(el) => {
-              dotRefs.current[i] = el;
-            }}
-            aria-hidden="true"
-            style={{ ...CORNER_DOT_STYLE, ...style }}
-          />
-        ))}
-        <h2
-          className="font-bold mb-4 font-[family-name:var(--font-museo-moderno)] whitespace-nowrap"
-          style={HEADING_STYLE}
-        >
-          <span ref={textRef} aria-label="Our Services" />
-        </h2>
-        <span
-          ref={underlineRef}
-          aria-hidden="true"
-          style={UNDERLINE_STYLE}
-        />
+      <div className="flex items-center gap-1.5">
+        <span className="w-2 h-2 rounded-full bg-white/40" />
+        <span className="w-1.5 h-1.5 rounded-full bg-white/25" />
+        <span className="w-1 h-1 rounded-full bg-white/15" />
       </div>
+      <span
+        ref={textRef}
+        className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-white/60 font-(family-name:--font-geist-mono)"
+        aria-label="our services"
+      />
+      <span className="flex-1 h-px bg-linear-to-r from-white/20 to-transparent" />
     </div>
   );
 });
@@ -407,7 +186,7 @@ const BentoCard = memo(
       if (!ref.current) return;
       gsap.to(ref.current, {
         y: -3,
-        boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+        boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
         duration: 0.28,
         ease: "power2.out",
       });
@@ -430,7 +209,7 @@ const BentoCard = memo(
         ref={ref}
         onMouseEnter={handleEnter}
         onMouseLeave={handleLeave}
-        className={`rounded-2xl border border-dashed border-black/[0.13] bg-white/85 backdrop-blur-sm overflow-hidden ${className}`}
+        className={`rounded-2xl border border-white/8 bg-white/4 overflow-hidden ${className}`}
         style={{ boxShadow: BENTO_CARD_SHADOW, contain: "layout style" }}
       >
         {children}
@@ -441,7 +220,7 @@ const BentoCard = memo(
 BentoCard.displayName = "BentoCard";
 
 const Label = memo(({ children }: { children: React.ReactNode }) => (
-  <span className="text-[11px] sm:text-xs tracking-[0.16em] uppercase text-black/60 font-bold block">
+  <span className="text-[11px] sm:text-xs tracking-[0.16em] uppercase text-white/50 font-bold block">
     {children}
   </span>
 ));
@@ -466,9 +245,9 @@ const LazyLottieAnim = memo(({ animName }: { animName: string }) => {
               developer: () =>
                 import("@/public/assets/Coding Development.json"),
               futuretech: () =>
-                import("@/public/assets/Future tech Ui.json"),
+                import("@/public/assets/some.json"),
               cloud: () => import("@/public/assets/cloud.json"),
-              uiux: () => import("@/public/assets/ui ux.json"),
+              uiux: () => import("@/public/assets/Login.json"),
             };
 
           const loader = importMap[animName];
@@ -511,7 +290,7 @@ const SolarSVG = memo(() => (
     className="w-full h-full"
     style={{ padding: "8%" }}
   >
-    <g fill="#000" opacity="0.28">
+    <g fill="#FFF" opacity="0.28">
       <path d="M346.152,235.112c-1.074-4.652-5.719-7.556-10.367-6.478c-4.652,1.074-7.552,5.716-6.478,10.367c1.278,5.537,1.927,11.256,1.927,16.998c0,41.485-33.75,75.235-75.235,75.235c-41.485,0-75.235-33.75-75.235-75.235c0-41.485,33.75-75.235,75.235-75.235c25.033,0,48.356,12.403,62.391,33.177c2.672,3.956,8.045,4.995,12.002,2.324c3.957-2.673,4.996-8.046,2.325-12.003c-17.254-25.539-45.934-40.786-76.717-40.786c-51.018,0-92.524,41.506-92.524,92.524s41.506,92.524,92.524,92.524c51.018,0,92.524-41.506,92.524-92.524C348.523,248.95,347.726,241.923,346.152,235.112z" />
       <path d="M430.911,34.115c-25.902,0-46.975,21.073-46.975,46.974c0,25.902,21.073,46.974,46.975,46.974c25.902,0,46.974-21.072,46.974-46.974C477.885,55.188,456.813,34.115,430.911,34.115z M430.911,110.774c-16.369,0-29.686-13.317-29.686-29.685s13.317-29.685,29.686-29.685c16.368,0,29.685,13.317,29.685,29.685C460.596,97.458,447.279,110.774,430.911,110.774z" />
       <path d="M255.999,380.397c-20.048,0-36.357,16.309-36.357,36.357c0,20.047,16.309,36.356,36.357,36.356c20.048,0,36.357-16.309,36.357-36.356C292.357,396.706,276.048,380.397,255.999,380.397z M255.999,435.821c-10.514,0-19.068-8.553-19.068-19.067c0-10.515,8.555-19.068,19.068-19.068c10.514,0,19.068,8.553,19.068,19.068C275.068,427.268,266.513,435.821,255.999,435.821z" />
@@ -576,33 +355,33 @@ const HeadlineCard = memo(
     return (
       <BentoCard
         innerRef={innerRef}
-        className="p-3 sm:p-4 !bg-black !border-black relative overflow-hidden flex justify-center items-center"
+        className="p-3 sm:p-4 bg-black! border-black! relative overflow-hidden flex justify-center items-center"
       >
         <HeadlineSVGBackground />
-        <div className="absolute inset-[4px] rounded-xl border border-dashed border-white/[0.06] pointer-events-none" />
+        <div className="absolute inset-1 rounded-xl border border-dashed border-white/6 pointer-events-none" />
         <div className="relative z-10 grid gap-4 sm:gap-5 lg:grid-cols-[minmax(0,1.7fr)_minmax(22rem,0.9fr)] lg:items-center lg:gap-8">
-          <p className="max-w-[42rem] text-xs sm:text-sm md:text-base font-bold text-white leading-[1.3] font-[family-name:var(--font-museo-moderno)] lg:leading-[1.25]">
+          <p className="max-w-2xl text-xs sm:text-sm md:text-base font-bold text-white leading-[1.3] font-(family-name:--font-museo-moderno) lg:leading-tight">
             We design, build and deliver{" "}
             <span className="text-white/50">
               reliable, production-ready software
             </span>{" "}
             - turning ideas into scalable digital products.
           </p>
-          <div className="grid w-full grid-cols-3 divide-x divide-dashed divide-white/[0.10] lg:max-w-[24rem] lg:justify-self-end">
+          <div className="grid w-full grid-cols-3 divide-x divide-dashed divide-white/10 lg:max-w-96 lg:justify-self-end">
             {STATS.map((s, i) => (
               <div
                 key={s.label}
                 className={`flex min-w-0 flex-col gap-1.5 ${i > 0 ? "pl-3 sm:pl-4" : ""} ${i < 2 ? "pr-3 sm:pr-4" : ""}`}
               >
                 <span
-                  className="text-lg sm:text-xl md:text-2xl font-bold text-white font-[family-name:var(--font-museo-moderno)] leading-none tabular-nums"
+                  className="text-lg sm:text-xl md:text-2xl font-bold text-white font-(family-name:--font-museo-moderno) leading-none tabular-nums"
                   ref={(el) => {
                     numRefs.current[i] = el;
                   }}
                 >
                   0
                 </span>
-                <span className="text-[10px] sm:text-xs text-white/60 font-semibold tracking-[0.1em] uppercase leading-none mt-1">
+                <span className="text-[10px] sm:text-xs text-white/60 font-semibold tracking-widest uppercase leading-none mt-1">
                   {s.label}
                 </span>
                 <span className="text-[9px] sm:text-[11px] text-white/40 leading-tight">
@@ -734,12 +513,12 @@ const HowWeWorkCard = memo(
         innerRef={innerRef}
         className="sm:col-span-2 lg:col-span-2 p-2.5 sm:p-3 flex flex-col"
       >
-        <div className="flex items-center justify-center gap-2 font-[family-name:var(--font-museo-moderno)] font-bold uppercase tracking-[0.14em] text-[15px] sm:text-[17px] leading-none mb-1">
-          <span className="text-black/22 text-[0.88em]">{"{"}</span>
-          <span className="text-black/78">How We Work</span>
-          <span className="text-black/22 text-[0.88em]">{"}"}</span>
+        <div className="flex items-center justify-center gap-2 font-(family-name:--font-museo-moderno) font-bold uppercase tracking-[0.14em] text-[15px] sm:text-[17px] leading-none mb-1">
+          <span className="text-white/20 text-[0.88em]">{"{"}</span>
+          <span className="text-white/80">How We Work</span>
+          <span className="text-white/20 text-[0.88em]">{"}"}</span>
         </div>
-        <p className="text-[10px] sm:text-xs text-black/50 mt-0.5 mb-2 text-center">
+        <p className="text-[10px] sm:text-xs text-white/50 mt-0.5 mb-2 text-center">
           Our three-phase delivery framework
         </p>
         <div className="flex-1 flex items-center w-full">
@@ -753,7 +532,7 @@ const HowWeWorkCard = memo(
               y1="22"
               x2="270"
               y2="22"
-              stroke="rgba(0,0,0,0.20)"
+              stroke="rgba(255,255,255,0.15)"
               strokeWidth="1.5"
               strokeDasharray="5 4"
             />
@@ -763,11 +542,11 @@ const HowWeWorkCard = memo(
               y1="22"
               x2="30"
               y2="22"
-              stroke="rgba(0,0,0,0.70)"
+              stroke="rgba(255,255,255,0.65)"
               strokeWidth="2.5"
               strokeLinecap="round"
             />
-            <circle r="4" fill="rgba(0,0,0,0.55)">
+            <circle r="4" fill="rgba(255,255,255,0.9)">
               <animateMotion
                 dur="2.5s"
                 repeatCount="indefinite"
@@ -780,7 +559,7 @@ const HowWeWorkCard = memo(
                 repeatCount="indefinite"
               />
             </circle>
-            <circle r="14" fill="rgba(0,0,0,0.10)">
+            <circle r="14" fill="rgba(255,255,255,0.07)">
               <animateMotion
                 dur="2.5s"
                 repeatCount="indefinite"
@@ -800,7 +579,7 @@ const HowWeWorkCard = memo(
                   cy="22"
                   r="14"
                   fill="none"
-                  stroke="rgba(0,0,0,0.18)"
+                  stroke="rgba(255,255,255,0.12)"
                   strokeWidth="1.5"
                 >
                   <animate
@@ -823,7 +602,7 @@ const HowWeWorkCard = memo(
                   cx={s.x}
                   cy="22"
                   r="0"
-                  fill="rgba(0,0,0,0.85)"
+                  fill="rgba(255,255,255,0.9)"
                 />
                 <text
                   x={s.x}
@@ -831,7 +610,7 @@ const HowWeWorkCard = memo(
                   textAnchor="middle"
                   fontSize="8"
                   fontWeight="800"
-                  fill="white"
+                  fill="rgba(0,0,0,0.85)"
                   fontFamily="inherit"
                 >
                   {s.num}
@@ -842,7 +621,7 @@ const HowWeWorkCard = memo(
                   textAnchor="middle"
                   fontSize="10"
                   fontWeight="800"
-                  fill="rgba(0,0,0,0.80)"
+                  fill="rgba(255,255,255,0.75)"
                   letterSpacing="0.08em"
                   fontFamily="inherit"
                 >
@@ -853,7 +632,7 @@ const HowWeWorkCard = memo(
                   y="62"
                   textAnchor="middle"
                   fontSize="9"
-                  fill="rgba(0,0,0,0.45)"
+                  fill="rgba(255,255,255,0.40)"
                   fontFamily="inherit"
                 >
                   {s.sub}
@@ -874,12 +653,12 @@ const DeliveryCard = memo(
       innerRef={innerRef}
       className="sm:col-span-2 lg:col-span-2 p-2.5 sm:p-3 flex flex-col"
     >
-      <div className="flex items-center justify-center gap-2 font-[family-name:var(--font-museo-moderno)] font-bold uppercase tracking-[0.14em] text-[15px] sm:text-[17px] leading-none mb-1">
-        <span className="text-black/22 text-[0.88em]">{"{"}</span>
-        <span className="text-black/78">Delivery Timeline</span>
-        <span className="text-black/22 text-[0.88em]">{"}"}</span>
+      <div className="flex items-center justify-center gap-2 font-(family-name:--font-museo-moderno) font-bold uppercase tracking-[0.14em] text-[15px] sm:text-[17px] leading-none mb-1">
+        <span className="text-white/20 text-[0.88em]">{"{"}</span>
+        <span className="text-white/80">Delivery Timeline</span>
+        <span className="text-white/20 text-[0.88em]">{"}"}</span>
       </div>
-      <p className="text-[10px] sm:text-xs text-black/50 font-medium mt-0.5 mb-2 text-center">
+      <p className="text-[10px] sm:text-xs text-white/50 font-medium mt-0.5 mb-2 text-center">
         Typical MVP: 4 - 6 weeks
       </p>
       <div className="w-full">
@@ -897,74 +676,140 @@ DeliveryCard.displayName = "DeliveryCard";
 
 const EngagementCard = memo(
   ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement | null> }) => {
-    const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const barRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const pctRefs = useRef<(HTMLSpanElement | null)[]>([]);
+    const wrapRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-      const targets = rowRefs.current.filter(Boolean);
-      if (!targets.length) return;
-      const tween = gsap.fromTo(
-        targets,
-        { opacity: 0, x: -12 },
-        {
-          opacity: 1,
-          x: 0,
-          stagger: 0.1,
-          duration: 0.45,
-          ease: "power2.out",
+      const bars = barRefs.current.filter(Boolean);
+      const pcts = pctRefs.current.filter(Boolean);
+      if (!bars.length) return;
+
+      gsap.set(bars, { scaleX: 0, transformOrigin: "left" });
+
+      CAPABILITIES.forEach((cap, i) => {
+        const obj = { val: 0 };
+        gsap.to(obj, {
+          val: cap.pct,
+          duration: 1.1,
+          delay: i * 0.12,
+          ease: "power3.out",
           scrollTrigger: {
-            trigger: targets[0],
-            start: "top 88%",
+            trigger: wrapRef.current,
+            start: "top 86%",
             once: true,
           },
-        }
-      );
-      return () => {
-        tween.kill();
-      };
+          onUpdate() {
+            if (pcts[i]) pcts[i]!.textContent = Math.round(obj.val) + "%";
+          },
+        });
+        gsap.to(bars[i], {
+          scaleX: cap.pct / 100,
+          duration: 1.1,
+          delay: i * 0.12,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: wrapRef.current,
+            start: "top 86%",
+            once: true,
+          },
+        });
+      });
+
+      const rows = wrapRef.current?.querySelectorAll<HTMLDivElement>(".cap-row");
+      if (rows?.length) {
+        gsap.fromTo(
+          rows,
+          { opacity: 0, y: 8 },
+          {
+            opacity: 1,
+            y: 0,
+            stagger: 0.1,
+            duration: 0.45,
+            ease: "power2.out",
+            scrollTrigger: { trigger: wrapRef.current, start: "top 86%", once: true },
+          }
+        );
+      }
     }, []);
 
     return (
       <BentoCard
         innerRef={innerRef}
-        className="sm:col-span-2 md:col-span-2 p-2.5 sm:p-3 flex flex-col"
+        className="sm:col-span-2 md:col-span-2 p-4 sm:p-5 flex flex-col relative overflow-hidden"
       >
-        <div className="flex items-center gap-2 font-[family-name:var(--font-museo-moderno)] font-bold uppercase tracking-[0.14em] text-[15px] sm:text-[17px] leading-none mb-1">
-          <span className="text-black/22 text-[0.88em]">{"{"}</span>
-          <span className="text-black/78">Engagement Models</span>
-          <span className="text-black/22 text-[0.88em]">{"}"}</span>
-        </div>
-        <p className="text-[10px] sm:text-xs text-black/50 mt-0.5 mb-2">
-          Three ways to work with us
-        </p>
-        <div className="flex flex-col gap-1.5 flex-1 justify-center">
-          {ENGAGEMENT_MODELS.map((m, i) => (
-            <div
-              key={m.tag}
-              ref={(el) => {
-                rowRefs.current[i] = el;
-              }}
-              className="flex items-center gap-2 p-1.5 sm:p-2 rounded-md border border-dashed border-black/[0.12] bg-gradient-to-r from-black/[0.02] to-transparent hover:border-black/25 hover:from-black/[0.04] transition-all duration-300"
-              style={{ opacity: 0 }}
-            >
-              <div className="shrink-0">{ENGAGEMENT_ICONS[i]}</div>
-              <div className="flex flex-col flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-xs font-bold text-black/85 leading-none">
-                    {m.headline}
-                  </span>
-                  <span className="text-[7px] font-bold tracking-[0.1em] uppercase text-black/45 border border-dashed border-black/20 rounded-full px-1.5 py-0.5 leading-none">
-                    {m.badge}
-                  </span>
-                </div>
-                <span className="text-[10px] text-black/50 mt-0.5 leading-snug">
-                  {m.detail}
+        {/* faint grid lines */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
+          {[25, 50, 75, 100].map((x) => (
+            <line key={x} x1={`${x}%`} y1="0" x2={`${x}%`} y2="100%"
+              stroke="rgba(255,255,255,0.04)" strokeWidth="1" strokeDasharray="3 4" />
+          ))}
+        </svg>
+
+        <div ref={wrapRef} className="relative z-10 flex flex-col h-full">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <div>
+              <div className="flex items-center gap-2 mb-0.5">
+                <span className="h-px w-4 bg-white/20" />
+                <span className="text-[9px] tracking-[0.28em] uppercase text-white/30 font-(family-name:--font-geist-mono)">
+                  Expertise
                 </span>
               </div>
-              <span className="shrink-0 text-lg font-black text-black/40 font-[family-name:var(--font-museo-moderno)] leading-none">
-                {m.tag}
+              <p className="text-[14px] sm:text-[16px] font-bold text-white/90 font-(family-name:--font-museo-moderno) uppercase tracking-widest leading-tight">
+                What We Build
+              </p>
+            </div>
+            <div className="flex flex-col items-end gap-0.5">
+              <span className="text-[9px] text-white/20 font-(family-name:--font-geist-mono) tracking-widest uppercase">Proficiency</span>
+              <span className="text-[22px] sm:text-[26px] font-black text-white/8 font-(family-name:--font-museo-moderno) leading-none select-none">
+                100
               </span>
             </div>
-          ))}
+          </div>
+
+          <div className="flex flex-col gap-3 sm:gap-3.5 flex-1 justify-center">
+            {CAPABILITIES.map((cap, i) => (
+              <div key={cap.label} className="cap-row flex flex-col gap-1" style={{ opacity: 0 }}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-[11px] sm:text-[12px] font-bold text-white/85 font-(family-name:--font-museo-moderno) tracking-wide">
+                      {cap.label}
+                    </span>
+                    <span className="text-[9px] text-white/25 font-(family-name:--font-geist-mono) hidden sm:inline">
+                      {cap.note}
+                    </span>
+                  </div>
+                  <span
+                    ref={(el) => { pctRefs.current[i] = el; }}
+                    className="text-[10px] font-bold tabular-nums text-white/50 font-(family-name:--font-geist-mono)"
+                  >
+                    0%
+                  </span>
+                </div>
+                {/* track */}
+                <div className="relative h-1.5 w-full rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                  <div
+                    ref={(el) => { barRefs.current[i] = el; }}
+                    className="absolute inset-y-0 left-0 w-full rounded-full"
+                    style={{
+                      background: `linear-gradient(90deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.25) ${cap.pct}%)`,
+                      transformOrigin: "left",
+                      transform: "scaleX(0)",
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-3 pt-3 border-t border-white/6 flex items-center justify-between">
+            <span className="text-[9px] text-white/25 font-(family-name:--font-geist-mono) tracking-[0.2em] uppercase">Based on shipped projects</span>
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
+              <span className="w-1 h-1 rounded-full bg-white/20" />
+              <span className="w-1 h-1 rounded-full bg-white/10" />
+            </div>
+          </div>
         </div>
       </BentoCard>
     );
@@ -976,9 +821,9 @@ const DeliverablesBackgroundSVG = memo(() => (
   <svg
     className="absolute inset-0 w-full h-full pointer-events-none"
     viewBox="0 0 128 128"
-    style={{ padding: "10%", opacity: 0.12 }}
+    style={{ padding: "10%", opacity: 0.07 }}
   >
-    <g fill="#000">
+    <g fill="#fff">
       <path d="M51.54,61.5A12.46,12.46,0,1,0,64,49.05,12.47,12.47,0,0,0,51.54,61.5Zm22.92,0A10.46,10.46,0,1,1,64,51.05,10.47,10.47,0,0,1,74.46,61.5Z" />
       <path d="M14.2,31.49l-.06.12A1,1,0,0,0,14.48,33a1,1,0,0,0,.51.14,1,1,0,0,0,.86-.48h0a7.64,7.64,0,0,0,9.33-11.69h0a1,1,0,0,0-1.38-1.45l-.09.09A7.63,7.63,0,0,0,14.2,31.49Zm5.1-11.33a5.65,5.65,0,1,1-5.65,5.65A5.65,5.65,0,0,1,19.3,20.16Z" />
       <path d="M110.16,78.76a7.64,7.64,0,0,0-4.31-6.86c0-.05,0-.1,0-.15a1,1,0,0,0-1.94-.49,7.56,7.56,0,0,0-1.44-.14,7.63,7.63,0,0,0-4.65,13.7A1,1,0,0,0,99.52,86l.08-.12a7.64,7.64,0,0,0,10.56-7.07Zm-7.65,5.65a5.65,5.65,0,1,1,5.65-5.65A5.66,5.66,0,0,1,102.51,84.41Z" />
@@ -1006,12 +851,12 @@ const CheckIcon = memo(() => (
       width="20"
       height="20"
       rx="6"
-      stroke="rgba(0,0,0,0.25)"
+      stroke="rgba(255,255,255,0.2)"
       strokeWidth="1.2"
     />
     <path
       d="M6.5 11.5L9.5 14.5L15.5 7.5"
-      stroke="rgba(0,0,0,0.60)"
+      stroke="rgba(255,255,255,0.6)"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -1056,12 +901,12 @@ const DeliverablesCard = memo(
       >
         <DeliverablesBackgroundSVG />
         <div className="relative z-10 flex flex-col flex-1">
-          <div className="flex items-center gap-2 font-[family-name:var(--font-museo-moderno)] font-bold uppercase tracking-[0.14em] text-[15px] sm:text-[17px] leading-none mb-1">
-            <span className="text-black/22 text-[0.88em]">{"{"}</span>
-            <span className="text-black/78">What You Get</span>
-            <span className="text-black/22 text-[0.88em]">{"}"}</span>
+          <div className="flex items-center gap-2 font-(family-name:--font-museo-moderno) font-bold uppercase tracking-[0.14em] text-[15px] sm:text-[17px] leading-none mb-1">
+            <span className="text-white/20 text-[0.88em]">{"{"}</span>
+            <span className="text-white/80">What You Get</span>
+            <span className="text-white/20 text-[0.88em]">{"}"}</span>
           </div>
-          <p className="text-[10px] sm:text-xs text-black/50 mt-0.5 mb-2">
+          <p className="text-[10px] sm:text-xs text-white/50 mt-0.5 mb-2">
             Every engagement includes
           </p>
           <ul
@@ -1071,11 +916,11 @@ const DeliverablesCard = memo(
             {DELIVERABLE_ITEMS.map((text) => (
               <li
                 key={text}
-                className="flex items-center gap-2 p-1.5 rounded-md hover:bg-black/[0.02] transition-colors duration-200"
+                className="flex items-center gap-2 p-1.5 rounded-md hover:bg-white/4 transition-colors duration-200"
                 style={{ opacity: 0 }}
               >
                 <CheckIcon />
-                <span className="text-[11px] sm:text-xs text-black/75 leading-snug font-medium">
+                <span className="text-[11px] sm:text-xs text-white/70 leading-snug font-medium">
                   {text}
                 </span>
               </li>
@@ -1090,248 +935,55 @@ DeliverablesCard.displayName = "DeliverablesCard";
 
 interface ServiceTileProps {
   service: (typeof services)[number];
-  layoutId: string;
-  titleLayoutId: string;
-  descLayoutId: string;
-  btnLayoutId: string;
-  onClick: () => void;
   index: number;
 }
 
-const ServiceTile = memo(
-  ({
-    service,
-    layoutId,
-    titleLayoutId,
-    descLayoutId,
-    btnLayoutId,
-    onClick,
-    index,
-  }: ServiceTileProps) => {
-    const cardRef = useRef<HTMLLIElement>(null);
-    const shimmerRef = useRef<HTMLSpanElement>(null);
-    const rafRef = useRef<number>(0);
+const ServiceTile = memo(({ service, index }: ServiceTileProps) => {
+  return (
+    <motion.li
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1], delay: index * 0.07 }}
+      style={{ ...SERVICE_TILE_STYLE, minHeight: "200px" }}
+      className="relative flex flex-col rounded-xl overflow-hidden hover:border-white/20"
+    >
+      {/* Lottie fills full card */}
+      <div className="absolute inset-0 w-full h-full">
+        <ServiceAnim index={index} />
+      </div>
 
-    const onMouseMove = useCallback(
-      (e: React.MouseEvent<HTMLLIElement>) => {
-        if (!cardRef.current || !shimmerRef.current) return;
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = requestAnimationFrame(() => {
-          const rect = cardRef.current!.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          const cx = rect.width / 2;
-          const cy = rect.height / 2;
-          gsap.to(cardRef.current, {
-            rotateX: ((y - cy) / cy) * -5,
-            rotateY: ((x - cx) / cx) * 5,
-            duration: 0.3,
-            ease: "power2.out",
-            transformPerspective: 900,
-            overwrite: "auto",
-          });
-          gsap.to(shimmerRef.current, {
-            background: `radial-gradient(circle at ${(x / rect.width) * 100}% ${(y / rect.height) * 100}%, rgba(255,255,255,0.22) 0%, transparent 60%)`,
-            duration: 0.25,
-            ease: "none",
-            overwrite: "auto",
-          });
-        });
-      },
-      []
-    );
-
-    const onMouseEnter = useCallback(() => {
-      if (!cardRef.current) return;
-      gsap.to(cardRef.current, {
-        scale: 1.03,
-        boxShadow: "0 8px 28px rgba(0,0,0,0.12)",
-        duration: 0.35,
-        ease: "power3.out",
-      });
-    }, []);
-
-    const onMouseLeave = useCallback(() => {
-      cancelAnimationFrame(rafRef.current);
-      if (!cardRef.current || !shimmerRef.current) return;
-      gsap.to(cardRef.current, {
-        rotateX: 0,
-        rotateY: 0,
-        scale: 1,
-        boxShadow: "0 2px 14px rgba(0,0,0,0.07)",
-        duration: 0.5,
-        ease: "elastic.out(1, 0.75)",
-      });
-      gsap.to(shimmerRef.current, {
-        background: "transparent",
-        duration: 0.25,
-      });
-    }, []);
-
-    useEffect(() => {
-      return () => cancelAnimationFrame(rafRef.current);
-    }, []);
-
-    const titleMetrics = useMemo(() => {
-      const normalizedTitle = service.title.replace(/[{}]/g, "").trim();
-      const titleLength = normalizedTitle.length;
-      const longestSegment = normalizedTitle
-        .split(/[\s/&-]+/)
-        .reduce((maxLength, segment) => Math.max(maxLength, segment.length), 0);
-
-      if (titleLength >= 24 || longestSegment >= 12) {
-        return {
-          fontSize: "clamp(0.62rem, 0.95vw, 0.72rem)",
-          letterSpacing: "-0.01em",
-          lineHeight: 1.22,
-        };
-      }
-
-      if (titleLength >= 18 || longestSegment >= 9) {
-        return {
-          fontSize: "clamp(0.66rem, 1vw, 0.77rem)",
-          letterSpacing: "-0.014em",
-          lineHeight: 1.18,
-        };
-      }
-
-      return {
-        fontSize: "clamp(0.7rem, 1.1vw, 0.82rem)",
-        letterSpacing: "-0.02em",
-        lineHeight: 1.14,
-      };
-    }, [service.title]);
-
-    const titleStyle = useMemo(
-      () => ({
-        color: "rgba(0,0,0,0.88)",
-        ...titleMetrics,
-        overflowWrap: "anywhere" as const,
-        hyphens: "auto" as const,
-      }),
-      [titleMetrics]
-    );
-    const descStyle = useMemo(
-      () => ({
-        fontSize: "clamp(0.6rem, 0.9vw, 0.68rem)",
-        color: "rgba(0,0,0,0.50)",
-        lineHeight: 1.4,
-      }),
-      []
-    );
-
-    return (
-      <motion.li
-        ref={cardRef}
-        layoutId={layoutId}
-        onClick={onClick}
-        onMouseMove={onMouseMove}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        initial={{ opacity: 0, y: 24, filter: "blur(3px)" }}
-        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{
-          duration: 0.6,
-          ease: [0.33, 1, 0.68, 1],
-          delay: index * 0.07 + 0.1,
-          layout: { duration: 0.4, delay: 0 },
+      {/* Dark gradient overlay so text stays readable */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.15) 100%)",
         }}
-        style={SERVICE_TILE_STYLE}
-        className="relative flex flex-col justify-between p-3 sm:p-3 rounded-xl cursor-pointer group overflow-hidden min-h-[220px] sm:min-h-[120px]"
-      >
-        <div className="absolute inset-0 pointer-events-none scale-[1.28] sm:scale-105 lg:scale-100 origin-center">
-          <ServiceAnim index={index} />
-        </div>
+      />
 
-        <div
-          className="absolute inset-0 pointer-events-none z-[1]"
-          style={SHIMMER_GRADIENT_STYLE}
-        />
-
-        <span
-          ref={shimmerRef}
-          aria-hidden="true"
-          className="absolute inset-0 rounded-inherit pointer-events-none z-[3]"
-          style={{ background: "transparent" }}
-        />
-
-        <div className="absolute inset-[4px] rounded-lg border border-dashed border-black/[0.05] pointer-events-none z-[2]" />
-
-        <div className="relative z-10 flex items-start justify-between">
-          <div className="shrink-0">
-            <div
-              style={{
-                borderRadius: "8px",
-                overflow: "hidden",
-                width: 40,
-                height: 40,
-                position: "relative",
-              }}
-            >
-              <div aria-hidden="true" style={TILE_IMAGE_OVERLAY_STYLE} />
-              <Image
-                src={service.src}
-                alt={service.title}
-                fill
-                sizes="40px"
-                className="object-cover object-center"
-                style={{ filter: "saturate(0.8) brightness(0.92)" }}
-              />
-            </div>
-          </div>
-          <motion.span
-            layoutId={btnLayoutId}
-            className="shrink-0 relative z-10 px-2 py-0.5 text-[7px] rounded-full font-bold tracking-[0.12em] uppercase border border-dashed border-black/[0.15] text-black/45 group-hover:border-black/50 group-hover:text-black/70 bg-white/60 backdrop-blur-sm transition-colors duration-300"
-          >
-            {service.ctaText}
-          </motion.span>
-        </div>
-
-        <div className="relative z-10 mt-auto pt-2">
-          <motion.h3
-            layoutId={titleLayoutId}
-            className="max-w-full font-bold font-[family-name:var(--font-museo-moderno)] text-pretty leading-tight break-words"
-            style={titleStyle}
+      {/* Content pinned to bottom */}
+      <div className="relative z-10 mt-auto p-4 sm:p-5">
+        <div className="flex items-start justify-between mb-1">
+          <h3
+            className="font-bold font-(family-name:--font-museo-moderno) text-white/90 leading-snug wrap-break-word text-pretty"
+            style={{ fontSize: "clamp(0.75rem, 1.2vw, 0.9rem)", letterSpacing: "-0.01em" }}
           >
             {service.title}
-          </motion.h3>
-          <motion.p
-            layoutId={descLayoutId}
-            className="mt-0.5"
-            style={descStyle}
-          >
-            {service.description}
-          </motion.p>
+          </h3>
+          <span className="text-[7px] font-bold tracking-[0.14em] uppercase text-white/30 border border-white/10 rounded-full px-2 py-0.5 leading-none shrink-0 ml-2">
+            {service.ctaText}
+          </span>
         </div>
-      </motion.li>
-    );
-  }
-);
+        <p className="text-white/50" style={{ fontSize: "clamp(0.6rem, 0.9vw, 0.7rem)" }}>
+          {service.description}
+        </p>
+      </div>
+    </motion.li>
+  );
+});
 ServiceTile.displayName = "ServiceTile";
 
-const CloseIcon = memo(() => (
-  <motion.svg
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0, transition: { duration: 0.05 } }}
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="h-4 w-4 text-black/70"
-  >
-    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-    <path d="M18 6l-12 12" />
-    <path d="M6 6l12 12" />
-  </motion.svg>
-));
-CloseIcon.displayName = "CloseIcon";
 
 const services = [
   {
@@ -1432,10 +1084,6 @@ const services = [
 const ContentSection = () => {
   const borderRef = useRef(null);
   const inView = useInView(borderRef, { once: true, margin: "-80px" });
-  const [active, setActive] = useState<(typeof services)[number] | null>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const modalDisplaceRef = useRef<SVGFEDisplacementMapElement>(null);
-  const id = useId();
 
   const bentoPanelRef = useMemo(
     () => ({
@@ -1473,49 +1121,11 @@ const ContentSection = () => {
     };
   }, [bentoPanelRef]);
 
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setActive(null);
-    };
-    document.body.style.overflow = active ? "hidden" : "auto";
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [active]);
-
-  useOutsideClick(cardRef, () => setActive(null));
-
-  const onModalImageEnter = useCallback(() => {
-    if (modalDisplaceRef.current)
-      gsap.to(modalDisplaceRef.current, {
-        attr: { scale: 10 },
-        duration: 0.55,
-        ease: "power2.out",
-      });
-  }, []);
-
-  const onModalImageLeave = useCallback(() => {
-    if (modalDisplaceRef.current)
-      gsap.to(modalDisplaceRef.current, {
-        attr: { scale: 0 },
-        duration: 0.8,
-        ease: "power3.out",
-      });
-  }, []);
-
   return (
     <div
       id="services"
-      className="relative w-full bg-white flex flex-col justify-center py-8 sm:py-10 lg:py-14 px-4 sm:px-6 lg:px-10 xl:px-14 overflow-hidden"
+      className="relative w-full bg-black flex flex-col justify-center py-8 sm:py-10 lg:py-14 px-4 sm:px-6 lg:px-10 xl:px-14 overflow-hidden"
     >
-      <Image
-        src="/assets/bg.png"
-        alt=""
-        fill
-        className="object-cover opacity-10"
-        aria-hidden="true"
-      />
-      <div className="absolute inset-0 backdrop-blur-sm pointer-events-none" />
-
       <div
         ref={borderRef}
         className="absolute inset-1.5 sm:inset-2 md:inset-3 pointer-events-none z-10"
@@ -1570,158 +1180,6 @@ const ContentSection = () => {
         )}
       </div>
 
-      <AnimatePresence>
-        {active && (
-          <motion.div
-            key="backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[90]"
-          />
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {active && (
-          <div className="fixed inset-0 grid place-items-center z-[100] p-4 sm:p-6">
-            <motion.button
-              key={`close-btn-${active.title}-${id}`}
-              layout
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, transition: { duration: 0.05 } }}
-              className="flex absolute top-3 right-3 lg:hidden items-center justify-center bg-white border border-dashed border-black/25 rounded-full h-8 w-8 shadow-sm z-[110]"
-              onClick={() => setActive(null)}
-            >
-              <CloseIcon />
-            </motion.button>
-
-            <motion.div
-              layoutId={`card-${active.title}-${id}`}
-              ref={cardRef}
-              style={{
-                background: "#fff",
-                border: "1px dashed rgba(0,0,0,0.18)",
-                boxShadow: MODAL_SHADOW,
-              }}
-              className="w-full max-w-[500px] max-h-[90dvh] flex flex-col rounded-2xl overflow-hidden"
-            >
-              <div
-                className="relative overflow-hidden cursor-crosshair shrink-0"
-                style={{ borderBottom: "1px dashed rgba(0,0,0,0.12)" }}
-                onMouseEnter={onModalImageEnter}
-                onMouseLeave={onModalImageLeave}
-              >
-                <svg className="absolute w-0 h-0" aria-hidden="true">
-                  <defs>
-                    <filter
-                      id="modal-water"
-                      x="0%"
-                      y="0%"
-                      width="100%"
-                      height="100%"
-                    >
-                      <feTurbulence
-                        type="fractalNoise"
-                        baseFrequency="0.022 0.026"
-                        numOctaves="3"
-                        seed="8"
-                        result="noise"
-                      >
-                        <animate
-                          attributeName="baseFrequency"
-                          values="0.022 0.026;0.034 0.018;0.022 0.026"
-                          dur="5s"
-                          repeatCount="indefinite"
-                        />
-                      </feTurbulence>
-                      <feDisplacementMap
-                        ref={modalDisplaceRef}
-                        in="SourceGraphic"
-                        in2="noise"
-                        scale="0"
-                        xChannelSelector="R"
-                        yChannelSelector="G"
-                      />
-                    </filter>
-                  </defs>
-                </svg>
-                <div style={{ margin: "-12px", filter: "url(#modal-water)" }}>
-                  <Image
-                    width={524}
-                    height={200}
-                    src={active.src}
-                    alt={active.title}
-                    style={{
-                      width: "calc(100% + 24px)",
-                      height: "200px",
-                      objectFit: "cover",
-                      objectPosition: "center",
-                      display: "block",
-                      filter: "saturate(0.9) brightness(0.94)",
-                    }}
-                  />
-                </div>
-                <div aria-hidden="true" style={IMAGE_OVERLAY_STYLE} />
-                <motion.button
-                  layout
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0, transition: { duration: 0.05 } }}
-                  className="hidden lg:flex absolute top-3 right-3 items-center justify-center bg-white/90 border border-dashed border-black/25 rounded-full h-7 w-7 backdrop-blur-sm hover:bg-white transition-colors"
-                  onClick={() => setActive(null)}
-                >
-                  <CloseIcon />
-                </motion.button>
-              </div>
-
-              <div className="overflow-y-auto flex-1 overscroll-contain">
-                <div
-                  className="flex justify-between items-start p-4 sm:p-5 gap-3"
-                  style={{ borderBottom: "1px dashed rgba(0,0,0,0.09)" }}
-                >
-                  <div className="min-w-0">
-                    <motion.h3
-                      layoutId={`title-${active.title}-${id}`}
-                      className="font-bold text-base sm:text-lg text-black font-[family-name:var(--font-museo-moderno)] leading-snug break-words"
-                    >
-                      {active.title}
-                    </motion.h3>
-                    <motion.p
-                      layoutId={`description-${active.title}-${id}`}
-                      className="text-black/40 text-xs sm:text-sm mt-0.5"
-                    >
-                      {active.description}
-                    </motion.p>
-                  </div>
-                  <motion.a
-                    layoutId={`button-${active.title}-${id}`}
-                    href={active.ctaLink}
-                    className="shrink-0 px-3 py-1.5 text-[9px] rounded-full font-bold tracking-widest uppercase border border-dashed border-black/25 text-black/60 bg-black/[0.025] hover:bg-black hover:text-white hover:border-black transition-all duration-250"
-                  >
-                    {active.ctaText}
-                  </motion.a>
-                </div>
-                <div className="p-4 sm:p-5 pb-8">
-                  <motion.div
-                    layout
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="text-black/60 text-sm leading-relaxed"
-                  >
-                    {typeof active.content === "function"
-                      ? active.content()
-                      : active.content}
-                  </motion.div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
       <div className="relative z-20 w-full flex flex-col px-1.5 sm:px-0">
         <ServicesHeading />
 
@@ -1733,64 +1191,19 @@ const ContentSection = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 items-stretch">
           <ul className="contents">
-            <ServiceTile
-              key={`card-${services[0].title}-${id}`}
-              service={services[0]}
-              index={0}
-              layoutId={`card-${services[0].title}-${id}`}
-              titleLayoutId={`title-${services[0].title}-${id}`}
-              descLayoutId={`description-${services[0].title}-${id}`}
-              btnLayoutId={`button-${services[0].title}-${id}`}
-              onClick={() => setActive(services[0])}
-            />
-            <ServiceTile
-              key={`card-${services[1].title}-${id}`}
-              service={services[1]}
-              index={1}
-              layoutId={`card-${services[1].title}-${id}`}
-              titleLayoutId={`title-${services[1].title}-${id}`}
-              descLayoutId={`description-${services[1].title}-${id}`}
-              btnLayoutId={`button-${services[1].title}-${id}`}
-              onClick={() => setActive(services[1])}
-            />
+            <ServiceTile service={services[0]} index={0} />
+            <ServiceTile service={services[1]} index={1} />
           </ul>
           <HowWeWorkCard innerRef={bentoPanelRef.howWeWork} />
 
           <DeliveryCard innerRef={bentoPanelRef.delivery} />
           <ul className="contents">
-            <ServiceTile
-              key={`card-${services[2].title}-${id}`}
-              service={services[2]}
-              index={2}
-              layoutId={`card-${services[2].title}-${id}`}
-              titleLayoutId={`title-${services[2].title}-${id}`}
-              descLayoutId={`description-${services[2].title}-${id}`}
-              btnLayoutId={`button-${services[2].title}-${id}`}
-              onClick={() => setActive(services[2])}
-            />
-            <ServiceTile
-              key={`card-${services[3].title}-${id}`}
-              service={services[3]}
-              index={3}
-              layoutId={`card-${services[3].title}-${id}`}
-              titleLayoutId={`title-${services[3].title}-${id}`}
-              descLayoutId={`description-${services[3].title}-${id}`}
-              btnLayoutId={`button-${services[3].title}-${id}`}
-              onClick={() => setActive(services[3])}
-            />
+            <ServiceTile service={services[2]} index={2} />
+            <ServiceTile service={services[3]} index={3} />
           </ul>
 
           <ul className="contents">
-            <ServiceTile
-              key={`card-${services[4].title}-${id}`}
-              service={services[4]}
-              index={4}
-              layoutId={`card-${services[4].title}-${id}`}
-              titleLayoutId={`title-${services[4].title}-${id}`}
-              descLayoutId={`description-${services[4].title}-${id}`}
-              btnLayoutId={`button-${services[4].title}-${id}`}
-              onClick={() => setActive(services[4])}
-            />
+            <ServiceTile service={services[4]} index={4} />
           </ul>
           <EngagementCard innerRef={bentoPanelRef.engagement} />
           <DeliverablesCard innerRef={bentoPanelRef.deliverables} />
