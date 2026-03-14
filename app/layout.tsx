@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/assets/bann.png",
+        url: "/ban.png",
         width: 1200,
         height: 630,
         alt: `${SITE_CONFIG.name} Open Graph Image`,
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     title: SITE_CONFIG.title,
     description: SITE_CONFIG.description,
     creator: SITE_CONFIG.twitterHandle,
-    images: ["/assets/bann.png"],
+    images: ["/ban.png"],
   },
   robots: {
     index: true,

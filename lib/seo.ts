@@ -79,7 +79,7 @@ export function createPageMetadata({ title, description, path, keywords }: PageS
       type: "website",
       images: [
         {
-          url: "/assets/bann.png",
+          url: "/ban.png",
           width: 1200,
           height: 630,
           alt: `${SITE_CONFIG.name} Open Graph Image`,
@@ -91,7 +91,7 @@ export function createPageMetadata({ title, description, path, keywords }: PageS
       title,
       description,
       creator: SITE_CONFIG.twitterHandle,
-      images: ["/assets/bann.png"],
+      images: ["/ban.png"],
     },
   };
 }
