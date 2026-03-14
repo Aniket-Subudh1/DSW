@@ -10,6 +10,7 @@ import {
   MotionValue,
 } from "framer-motion";
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 
 function GradientLayer({
   springX,
@@ -171,9 +172,11 @@ export const NoiseBackground = ({
       />
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <img
+        <Image
           src="/assets/noise.png"
           alt=""
+          fill
+          sizes="100vw"
           className="h-full w-full object-cover opacity-[var(--noise-opacity)]"
           style={{ mixBlendMode: "overlay" }}
         />
