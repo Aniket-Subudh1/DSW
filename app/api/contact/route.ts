@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, readFile, mkdir } from "fs/promises";
-import path from "path";
 import nodemailer from "nodemailer";
+import clientPromise from "@/lib/mongodb";
 
 function sanitize(val: unknown): string {
   if (typeof val !== "string") return "";
@@ -50,21 +49,8 @@ export async function POST(req: NextRequest) {
       submittedAt: new Date().toISOString(),
     };
 
-    const dataDir = path.join(process.cwd(), "data");
-    const filePath = path.join(dataDir, "submissions.json");
-
-    await mkdir(dataDir, { recursive: true });
-
-    let submissions: unknown[] = [];
-    try {
-      const existing = await readFile(filePath, "utf-8");
-      const parsed = JSON.parse(existing);
-      if (Array.isArray(parsed)) submissions = parsed;
-    } catch {
-    }
-
-    submissions.push(submission);
-    await writeFile(filePath, JSON.stringify(submissions, null, 2), "utf-8");
+    const client = await clientPromise;
+    await client.db().collection("submissions").insertOne(submission);
 
     const smtpHost = process.env.SMTP_HOST;
     const smtpPort = Number(process.env.SMTP_PORT ?? 465);
